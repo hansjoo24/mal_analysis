@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configuration / Secrets (contains API keys, DB passwords, etc.)
+config.ini
+.env
+
+# User requested directories
+mel/
+backup/
+analyzed_eml/
+_backup/
+_ole/
+_ole_md/
+
+# Existing directories that should not be tracked (Analysis outputs and inputs)
+eml/
+analysis_result/
+instruction_output/
+_old/
+_old_md/
+
+# Miscellaneous / Temporary files
+악성파일분석스크립트/
+*.zip
+*.log
+*.tmp
+.DS_Store
