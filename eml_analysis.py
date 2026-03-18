@@ -30,7 +30,7 @@ try:
         detect_file_type
     )
 except ImportError as e:
-    print(f"[!] 필수 모듈을 찾을 수 없습니다: {e}")
+    print(f"\033[91m[!] 필수 모듈을 찾을 수 없습니다: {e}\033[0m")
     sys.exit(1)
 
 # 분석 결과가 최종 저장될 디렉토리 경로
@@ -144,7 +144,7 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
         base_name, _ = os.path.splitext(filename)
         
         if not os.path.exists(target_abs_path):
-            print(f"[!] File not found: {target_file}")
+            print(f"\033[91m[!] File not found: {target_file}\033[0m")
             return
 
         # 출력 디렉토리 확인/생성
@@ -192,7 +192,7 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
             # extract_eml이 생성한 실제 폴더명 찾기
             actual_folder_list = os.listdir(temp_eml_output_base)
             if not actual_folder_list:
-                print(f"[!] [{filename}] 추출된 폴더를 찾을 수 없습니다.")
+                print(f"\033[91m[!] [{filename}] 추출된 폴더를 찾을 수 없습니다.\033[0m")
                 return
             
             # 단일 EML을 분석하므로 폴더는 1개만 생성되었어야 함
@@ -254,7 +254,7 @@ async def reanalyze_all_attachments_async():
     print(f"[*] Starting batch re-analysis of attachments in: {eml_output_base}")
     
     if not os.path.exists(eml_output_base):
-        print(f"[!] Directory not found: {eml_output_base}")
+        print(f"\033[91m[!] Directory not found: {eml_output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(eml_output_base)):
@@ -298,7 +298,7 @@ async def preprocess_for_ai_async():
     """analyzed_eml 폴더 내의 분석 결과들을 모아 AI 분석용 총합 파일을 생성합니다."""
     print(f"[*] Starting AI preprocessing in: {eml_output_base}")
     if not os.path.exists(eml_output_base):
-        print(f"[!] Directory not found: {eml_output_base}")
+        print(f"\033[91m[!] Directory not found: {eml_output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(eml_output_base)):
@@ -328,7 +328,7 @@ async def _process_single_ai_analysis(folder_path, folder_name, summary_file, pr
         ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=summary_content)
         
         if ret_code_ai != 0:
-            print(f"  [!] gemini-cli failed for {folder_name}: {ai_stderr}")
+            print(f"\033[91m  [!] gemini-cli failed for {folder_name}: {ai_stderr}\033[0m")
             return
             
         ai_md_file = os.path.join(folder_path, f"{folder_name}_ai.md")
@@ -364,7 +364,7 @@ async def run_ai_analysis_async(output_dir_base=output_path):
     """_summary.txt 파일들을 기반으로 gemini-cli를 실행하여 AI 분석 결과를 파일 상단에 추가합니다."""
     print(f"\n[*] Starting AI analysis phase in: {eml_output_base}")
     if not os.path.exists(eml_output_base):
-        print(f"[!] Directory not found: {eml_output_base}")
+        print(f"\033[91m[!] Directory not found: {eml_output_base}\033[0m")
         return
 
     found_any_summary = False
@@ -386,7 +386,7 @@ async def run_ai_analysis_async(output_dir_base=output_path):
         tasks.append(asyncio.create_task(_process_single_ai_analysis(folder_path, folder_name, summary_file, AI_ANALYSIS_PROMPT, semaphore, output_dir_base)))
 
     if not found_any_summary:
-        print("[!] 경고: 분석을 진행할 _summary.txt 파일을 찾을 수 없습니다. (전처리 안됨)")
+        print("\033[91m[!] 경고: 분석을 진행할 _summary.txt 파일을 찾을 수 없습니다. (전처리 안됨)\033[0m")
         return
 
     print(f"[*] Found {len(tasks)} summary files. Running AI analysis concurrently (max 5 at a time)...")
@@ -433,13 +433,13 @@ async def main_async():
         if args.filename.lower().endswith('.eml'):
             tasks.append(asyncio.create_task(analyze_eml_file_async(args.filename, args.output_dir, vt_api_key, eml_semaphore)))
         else:
-            print(f"[!] {args.filename} is not an .eml file. This script only processes EML files.")
+            print(f"\033[91m[!] {args.filename} is not an .eml file. This script only processes EML files.\033[0m")
             return
     else:
         # 일괄 처리 모드 (지정된 경로 또는 기본 ./eml)
         target_dir = args.eml_path
         if not os.path.exists(target_dir):
-            print(f"[!] Directory not found: {target_dir}")
+            print(f"\033[91m[!] Directory not found: {target_dir}\033[0m")
             return
             
         print(f"[*] Scanning directory: {target_dir}")
@@ -479,9 +479,9 @@ def main():
              asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
         asyncio.run(main_async())
     except KeyboardInterrupt:
-        print("\n[!] Analysis interrupted by user.")
+        print("\033[91m\n[!] Analysis interrupted by user.\033[0m")
     except Exception as e:
-        print(f"[!] Unexpected error: {e}")
+        print(f"\033[91m[!] Unexpected error: {e}\033[0m")
 
 if __name__ == "__main__":
     main()

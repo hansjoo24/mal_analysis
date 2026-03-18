@@ -83,7 +83,7 @@ def extract_urls(msg):
                     attr_urls = re.findall(r'(?:href|src)=["\'](http[s]?://.*?)["\']', payload)
                     urls.update(attr_urls)
             except Exception as e:
-                print(f"  [!] URL 추출 중 오류: {e}")
+                print(f"\033[91m  [!] URL 추출 중 오류: {e}\033[0m")
     return sorted(list(urls))
 
 def get_final_destination(url):
@@ -150,7 +150,7 @@ def filter_and_deduplicate_urls(urls):
                     seen_pure_urls.add(pure_url)
                     final_filtered_results.append(original_url)
             except Exception as e:
-                print(f"    [!] 오류 ({original_url[:30]}): {e}")
+                print(f"\033[91m    [!] 오류 ({original_url[:30]}): {e}\033[0m")
                 final_filtered_results.append(original_url)
                 
     return sorted(final_filtered_results)
@@ -209,14 +209,14 @@ def load_vt_api_key():
             # 따옴표가 포함되어 있을 수 있으므로 제거
             return config['virusTotal']['api_key'].strip('"').strip("'")
     except Exception as e:
-        print(f"[!] config.ini 로드 실패: {e}")
+        print(f"\033[91m[!] config.ini 로드 실패: {e}\033[0m")
     return None
 
 def cmd_extract(eml_dir, output_base):
     """1. EML 파일을 각 폴더로 복사합니다."""
     print(f"[*] 모드: extract (EML 파일 정리)")
     if not os.path.exists(eml_dir):
-        print(f"  [!] EML 디렉토리가 없습니다: {eml_dir}")
+        print(f"\033[91m  [!] EML 디렉토리가 없습니다: {eml_dir}\033[0m")
         return
 
     eml_files = [f for f in os.listdir(eml_dir) if f.lower().endswith('.eml')]
@@ -249,10 +249,10 @@ def cmd_analyze_urls(output_base, api_key):
     """2. 각 폴더의 urls.txt 파일을 읽어 VirusTotal 분석을 수행합니다."""
     print(f"[*] 모드: url (URL VirusTotal 분석)")
     if not api_key:
-        print(f"  [!] VirusTotal API Key가 설정되지 않았습니다. (config.ini 또는 -apikey 확인)")
+        print(f"\033[91m  [!] VirusTotal API Key가 설정되지 않았습니다. (config.ini 또는 -apikey 확인)\033[0m")
         return
     if not os.path.exists(output_base):
-        print(f"  [!] 분석 폴더가 없습니다: {output_base}")
+        print(f"\033[91m  [!] 분석 폴더가 없습니다: {output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(output_base)):
@@ -347,7 +347,7 @@ def cmd_analyze_urls(output_base, api_key):
                     
                     # 무한 루프 방지를 위한 장치 (예: 10 사이클 이상이면 중단)
                     if cycle > 10:
-                        print(f"    [!] 최대 재시도 횟수 초과. 현재까지의 결과를 저장하고 종료합니다.")
+                        print(f"\033[91m    [!] 최대 재시도 횟수 초과. 현재까지의 결과를 저장하고 종료합니다.\033[0m")
                         break
 
                 for url, json_path, is_analysis in urls_to_analyze:
@@ -371,13 +371,13 @@ def cmd_analyze_urls(output_base, api_key):
                         
                 cycle += 1
         except Exception as e:
-            print(f"    [!] 오류 발생: {e}")
+            print(f"\033[91m    [!] 오류 발생: {e}\033[0m")
 
 def cmd_generate_list(output_base):
     """4. 각 폴더의 EML 파일을 기반으로 URL 리스트(urls.txt)를 생성합니다."""
     print(f"[*] 모드: list (URL 리스트 추출)")
     if not os.path.exists(output_base):
-        print(f"  [!] 분석 폴더가 없습니다: {output_base}")
+        print(f"\033[91m  [!] 분석 폴더가 없습니다: {output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(output_base)):
@@ -418,13 +418,13 @@ def cmd_generate_list(output_base):
                 
             print(f"    [+] URL 리스트 저장 완료: 원본({len(urls)}) / 필터링({len(filtered_urls)})")
         except Exception as e:
-            print(f"    [!] 오류 발생: {e}")
+            print(f"\033[91m    [!] 오류 발생: {e}\033[0m")
 
 def cmd_generate_info(output_base):
     """3. 각 폴더의 EML 파일을 기반으로 info 파일을 생성합니다."""
     print(f"[*] 모드: info (메일 정보 추출)")
     if not os.path.exists(output_base):
-        print(f"  [!] 분석 폴더가 없습니다: {output_base}")
+        print(f"\033[91m  [!] 분석 폴더가 없습니다: {output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(output_base)):
@@ -476,13 +476,13 @@ def cmd_generate_info(output_base):
                 f_info.write(f"- DKIM 서명 정보\n{dkim_info}\n")
             print(f"    [+] {info_path} 저장 완료")
         except Exception as e:
-            print(f"    [!] 오류 발생: {e}")
+            print(f"\033[91m    [!] 오류 발생: {e}\033[0m")
 
 def cmd_generate_report(output_base):
     """5. 각 폴더의 VT JSON 결과들을 분석하여 통합 리포트(url_analyze_result.txt)를 생성합니다."""
     print(f"[*] 모드: report (VT 분석 결과 리포트 생성)")
     if not os.path.exists(output_base):
-        print(f"  [!] 분석 폴더가 없습니다: {output_base}")
+        print(f"\033[91m  [!] 분석 폴더가 없습니다: {output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(output_base)):
@@ -537,7 +537,7 @@ def cmd_extract_attachments(output_base):
     """6. 각 폴더의 EML 파일에서 첨부파일을 추출합니다."""
     print(f"[*] 모드: attach (첨부파일 추출)")
     if not os.path.exists(output_base):
-        print(f"  [!] 분석 폴더가 없습니다: {output_base}")
+        print(f"\033[91m  [!] 분석 폴더가 없습니다: {output_base}\033[0m")
         return
 
     for folder_name in sorted(os.listdir(output_base)):
@@ -602,10 +602,10 @@ def cmd_extract_attachments(output_base):
                             zip_ref.extractall(unzip_dir)
                         print(f"    [+] 압축 해제 완료: {base_name}.zip")
                     except Exception as e:
-                        print(f"    [!] 압축 해제 실패 ({base_name}.zip): {e}")
+                        print(f"\033[91m    [!] 압축 해제 실패 ({base_name}.zip): {e}\033[0m")
                 
         except Exception as e:
-            print(f"    [!] 첨부파일 추출 오류 ({folder_name}): {e}")
+            print(f"\033[91m    [!] 첨부파일 추출 오류 ({folder_name}): {e}\033[0m")
 
 def main():
     parser = argparse.ArgumentParser(description="EML Analyzer Refactored (Extract/List/URL/Info) with config.ini support")
