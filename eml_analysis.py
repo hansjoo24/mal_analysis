@@ -247,6 +247,8 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
             f.write(ai_input_data)
         print(f"  [+] Saved AI context summary to: {os.path.basename(summary_out_file)}")
 
+        return actual_folder_name
+
     # 분석 완료, 원본 EML 파일은 그대로 폴더에 유지
 
 async def reanalyze_all_attachments_async():
@@ -360,7 +362,7 @@ async def _process_single_ai_analysis(folder_path, folder_name, summary_file, pr
         print(f"  [+] Copied to analysis_result: {dest_filename}")
 
 
-async def run_ai_analysis_async(output_dir_base=output_path):
+async def run_ai_analysis_async(output_dir_base=output_path, target_folders=None):
     """_summary.txt 파일들을 기반으로 gemini-cli를 실행하여 AI 분석 결과를 파일 상단에 추가합니다."""
     print(f"\n[*] Starting AI analysis phase in: {eml_output_base}")
     if not os.path.exists(eml_output_base):
@@ -372,8 +374,10 @@ async def run_ai_analysis_async(output_dir_base=output_path):
     
     # 동시 실행 수를 5개로 제한하기 위해 세마포어 사용
     semaphore = asyncio.Semaphore(5)
+    
+    folders_to_scan = sorted(os.listdir(eml_output_base)) if target_folders is None else target_folders
 
-    for folder_name in sorted(os.listdir(eml_output_base)):
+    for folder_name in folders_to_scan:
         folder_path = os.path.join(eml_output_base, folder_name)
         if not os.path.isdir(folder_path):
             continue
@@ -462,12 +466,13 @@ async def main_async():
 
     print(f"[*] Starting batch extraction and summary phase for {len(tasks)} files...")
     # 동시성 제한 없이 asyncio.gather로 빠르게 일괄 처리 (내부적으로 semaphore로 10개만 실행)
-    await asyncio.gather(*tasks)
+    results = await asyncio.gather(*tasks)
     print("\n[*] All initial extraction and summary tasks completed.")
     
     # AI 별도 비동기 실행 (모든 대상 파일에 대한 분석 후 _summary.txt 생성 완료 시점)
     if not args.preprocess and not args.reanalyze_attachments:
-        await run_ai_analysis_async(args.output_dir)
+        processed_folders = [r for r in results if r]
+        await run_ai_analysis_async(args.output_dir, target_folders=processed_folders)
         
     print("\n[*] EML Pipeline completely finished.")
 
