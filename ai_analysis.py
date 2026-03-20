@@ -5,11 +5,8 @@ import subprocess
 import sys
 import os
 import datetime
-import shutil
 import asyncio
-
-# 분석 결과가 저장될 디렉토리 경로
-output_path = "/mnt/hgfs/Suspicious_File/analysis_result/" 
+import re
 
 async def run_command_async(cmd_list, input_data=None):
     """
@@ -29,8 +26,7 @@ async def run_command_async(cmd_list, input_data=None):
     except Exception as e:
         return -1, "", str(e)
 
-async def analyze_file_async(target_file, output_dir_base):
-    # 나중에 안전하게 이동하기 위해 절대 경로가 필요합니다.
+async def analyze_file_async(target_file, output_dir):
     target_abs_path = os.path.abspath(target_file)
     filename = os.path.basename(target_abs_path)
     
@@ -39,9 +35,9 @@ async def analyze_file_async(target_file, output_dir_base):
         return
 
     # 출력 디렉토리 확인/생성
-    if not os.path.exists(output_dir_base):
+    if not os.path.exists(output_dir):
         try:
-            os.makedirs(output_dir_base)
+            os.makedirs(output_dir)
         except OSError as e:
             print(f"[!] Could not create output directory: {e}")
             return
@@ -63,9 +59,6 @@ async def analyze_file_async(target_file, output_dir_base):
 """
     
     python_exe = sys.executable
-    # file_analysis.py가 이 스크립트와 같은 디렉토리에 있다고 가정하거나,
-    # 이전의 하드코딩된 경로를 사용합니다. 
-    # 스크립트 위치를 기반으로 경로를 찾는 것이 더 안정적입니다.
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_analysis_script = os.path.join(script_dir, "file_analysis.py")
     if not os.path.exists(file_analysis_script):
@@ -74,19 +67,34 @@ async def analyze_file_async(target_file, output_dir_base):
 
     print(f"[*] [START] Analyzing: {filename}")
     
-    # 1. file_analysis.py 실행
-    # -file 옵션(자동 감지)을 사용합니다.
-    cmd_analysis = [python_exe, file_analysis_script, "-file", target_abs_path] 
+    # 1. file_analysis.py 실행 -> 결과를 파일로 저장하고 경로를 출력함
+    cmd_analysis = [python_exe, file_analysis_script, "-file", target_abs_path, "-out", output_dir] 
     
     ret_code, analysis_stdout, analysis_stderr = await run_command_async(cmd_analysis)
     
-    if ret_code != 0:
+    if ret_code != 0 and not analysis_stdout:
         print(f"[!] [{filename}] file_analysis.py failed: {analysis_stderr}")
         return
 
-    # 2. gemini-cli 실행
+    # file_analysis.py에서 생성한 결과 파일 경로 파싱
+    report_path_match = re.search(r'\[\*\] Report saved to (.*)', analysis_stdout)
+    if not report_path_match:
+        print(f"[!] [{filename}] Could not find analysis report path in output. Stdout was:\n{analysis_stdout}")
+        return
+        
+    analysis_report_path = report_path_match.group(1).strip()
+    
+    if not os.path.exists(analysis_report_path):
+        print(f"[!] [{filename}] Analysis report not found at: {analysis_report_path}")
+        return
+        
+    # file_analysis.py의 분석 결과 파일 읽기
+    with open(analysis_report_path, 'r', encoding='utf-8') as f:
+        analysis_content = f.read()
+
+    # 2. gemini-cli 실행 (읽어온 텍스트를 입력으로 전달)
     cmd_ai = ["gemini-cli", prompt]
-    ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=analysis_stdout)
+    ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=analysis_content)
 
     if ret_code_ai != 0:
         print(f"[!] [{filename}] gemini-cli failed: {ai_stderr}")
@@ -94,40 +102,29 @@ async def analyze_file_async(target_file, output_dir_base):
         
     final_result = ai_stdout
     
-    # 원본 출력 결과 추가
+    # 원본 출력 결과(file_analysis의 내용) 추가
     final_result += "\n\n---\n# 분석원문 \n\n"
-    final_result += "```\n" + analysis_stdout + "\n```"
+    final_result += "```\n" + analysis_content + "\n```"
 
-    # 3. 보고서 저장
+    # 3. 최종 보고서 저장
     date_str = datetime.datetime.now().strftime("%y%m%d")
     base_name_no_ext = os.path.splitext(filename)[0]
     output_filename = f"{date_str}_{base_name_no_ext}_analyis_result.md"
-    report_path = os.path.join(output_dir_base, output_filename)
+    report_path = os.path.join(output_dir, output_filename)
     
     try:
         with open(report_path, 'w', encoding='utf-8') as f:
             f.write(final_result)
-        print(f"[+] [{filename}] Report saved to: {report_path}")
+        print(f"[+] [{filename}] AI Report saved to: {report_path}")
     except IOError as e:
         print(f"[!] [{filename}] Failed to write report: {e}")
         return
 
-    # 4. 처리된 파일을 'analyzed' 디렉토리로 이동
-    # 분석이 성공적으로 실행되었을 때만 이동
-    analyzed_dir = os.path.join(os.path.dirname(target_abs_path), "analyzed")
-    if not os.path.exists(analyzed_dir):
-        os.makedirs(analyzed_dir, exist_ok=True)
-        
-    try:
-        shutil.move(target_abs_path, os.path.join(analyzed_dir, filename))
-        print(f"[-] [{filename}] Moved to: {analyzed_dir}")
-    except Exception as e:
-        print(f"[!] [{filename}] Failed to move file: {e}")
-
 async def main_async():
     parser = argparse.ArgumentParser(description="AI Analysis Wrapper (Batch & Async)")
     parser.add_argument("-file", dest="filename", help="Target file for analysis (Optional). If omitted, scans current directory.")
-    parser.add_argument("-out", dest="output_dir", default=output_path, help="Directory to save analysis result")
+    # 실행한 폴더를 기본 출력 디렉토리로 설정
+    parser.add_argument("-out", dest="output_dir", default=os.getcwd(), help="Directory to save analysis result")
     
     args = parser.parse_args()
     
@@ -167,7 +164,7 @@ async def main_async():
         return
 
     print(f"[*] Starting batch analysis for {len(tasks)} files...")
-    # 동시성 제한 없이 asyncio.gather로 빠르게 일괄 처리 (요청사항 반영)
+    # 동시성 제한 없이 asyncio.gather로 빠르게 일괄 처리
     await asyncio.gather(*tasks)
     print("\n[*] All analysis tasks completed.")
 
@@ -175,7 +172,6 @@ def main():
     try:
         if sys.platform == 'win32':
              # 윈도우 환경에서 비동기 서브프로세스 실행을 위한 이벤트 루프 정책 설정
-             # 파이썬 3.8+ 윈도우에서는 ProactorEventLoop가 기본이지만 명시적으로 설정
              asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
         asyncio.run(main_async())
     except KeyboardInterrupt:
