@@ -8,7 +8,6 @@ config.ini
 .env
 
 # User requested directories
-mel/
 backup/
 analyzed_eml/
 _backup/
@@ -17,6 +16,7 @@ _ole_md/
 
 # Existing directories that should not be tracked (Analysis outputs and inputs)
 eml/
+eml_bank/
 analysis_result/
 instruction_output/
 _old/

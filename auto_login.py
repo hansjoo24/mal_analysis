@@ -798,81 +798,117 @@ def download_eml_attachments(driver):
                             except Exception:
                                 pass
                         
+                        # 파일명 가져오기
+                        try:
+                            name_span = attach_li.find_element(By.CSS_SELECTOR, 'span[evt-rol="download-attach"]')
+                            filename = name_span.text.strip()
+                        except Exception:
+                            filename = f"unknown_{mail_id}_{aidx}" + (".eml" if is_eml else ".dat")
+                        
                         if is_eml:
-                            # 파일명 가져오기
-                            try:
-                                name_span = attach_li.find_element(By.CSS_SELECTOR, 'span[evt-rol="download-attach"]')
-                                filename = name_span.text.strip()
-                            except Exception:
-                                filename = f"unknown_{mail_id}_{aidx}.eml"
-                            
                             print(f"[+] EML 파일 발견: {filename}")
+                        else:
+                            print(f"[+] 일반 첨부파일 발견: {filename}")
+                        
+                        # 기존 파일 목록 스냅샷
+                        before_files = set(os.listdir(download_dir))
+                        
+                        # 다운로드 클릭
+                        try:
+                            name_span = attach_li.find_element(By.CSS_SELECTOR, 'span[evt-rol="download-attach"]')
+                            driver.execute_script("arguments[0].click();", name_span)
+                            print("[*] 다운로드 요청 전송 완료")
+                        except Exception as e:
+                            print(f"[!] 다운로드 클릭 실패: {e}")
+                            continue
+                        
+                        # 다운로드 완료 대기 (최대 30초)
+                        download_complete = False
+                        downloaded_filename = None
+                        for wait in range(30):
+                            time.sleep(1)
+                            current_files = set(os.listdir(download_dir))
+                            new_files = current_files - before_files
                             
-                            # 기존 파일 목록 스냅샷
-                            before_files = set(os.listdir(download_dir))
+                            # 다운로드 중 파일 확인
+                            is_downloading = any(
+                                f.endswith(".crdownload") or f.endswith(".tmp") 
+                                for f in current_files
+                            )
                             
-                            # 다운로드 클릭
-                            try:
-                                name_span = attach_li.find_element(By.CSS_SELECTOR, 'span[evt-rol="download-attach"]')
-                                driver.execute_script("arguments[0].click();", name_span)
-                                print("[*] 다운로드 요청 전송 완료")
-                            except Exception as e:
-                                print(f"[!] 다운로드 클릭 실패: {e}")
-                                continue
-                            
-                            # 다운로드 완료 대기 (최대 30초)
-                            download_complete = False
-                            for wait in range(30):
-                                time.sleep(1)
-                                current_files = set(os.listdir(download_dir))
-                                new_files = current_files - before_files
-                                
-                                # 다운로드 중 파일 확인
-                                is_downloading = any(
-                                    f.endswith(".crdownload") or f.endswith(".tmp") 
-                                    for f in current_files
-                                )
-                                
-                                if new_files and not is_downloading:
-                                    for nf in new_files:
-                                        if nf.lower().endswith(".eml"):
-                                            downloaded_count += 1
-                                            print(f"[SUCCESS] 다운로드 완료: {nf}")
-                                            download_complete = True
-                                            eml_found = True
-                                            break
-                                
-                                if download_complete:
+                            if new_files and not is_downloading:
+                                for nf in new_files:
+                                    # EML인 경우 EML 파일만 인정
+                                    if is_eml and not nf.lower().endswith(".eml"):
+                                        continue
+                                    downloaded_filename = nf
+                                    if is_eml:
+                                        downloaded_count += 1
+                                        eml_found = True
+                                    print(f"[SUCCESS] 다운로드 완료: {nf}")
+                                    download_complete = True
                                     break
                             
+                            if download_complete:
+                                break
+                        
+                        if not download_complete:
+                            # 팝업 처리 (다운로드 확인 팝업이 뜰 수 있음)
+                            try:
+                                popup = driver.find_element(By.CSS_SELECTOR, "[class*='popup']")
+                                if popup.is_displayed():
+                                    confirm_btns = popup.find_elements(By.CSS_SELECTOR, "button, a, [class*='btn']")
+                                    for cb in confirm_btns:
+                                        if "확인" in (cb.text or "") or "저장" in (cb.text or ""):
+                                            driver.execute_script("arguments[0].click();", cb)
+                                            print("[*] 다운로드 팝업 확인 클릭")
+                                            time.sleep(3)
+                                            break
+                            except Exception:
+                                pass
+                            
+                            # 재확인
+                            current_files = set(os.listdir(download_dir))
+                            new_files = current_files - before_files
+                            for nf in new_files:
+                                if is_eml and not nf.lower().endswith(".eml"):
+                                    continue
+                                downloaded_filename = nf
+                                if is_eml:
+                                    downloaded_count += 1
+                                    eml_found = True
+                                print(f"[SUCCESS] 다운로드 완료: {nf}")
+                                download_complete = True
+                                break
+                            
                             if not download_complete:
-                                # 팝업 처리 (다운로드 확인 팝업이 뜰 수 있음)
-                                try:
-                                    popup = driver.find_element(By.CSS_SELECTOR, "[class*='popup']")
-                                    if popup.is_displayed():
-                                        confirm_btns = popup.find_elements(By.CSS_SELECTOR, "button, a, [class*='btn']")
-                                        for cb in confirm_btns:
-                                            if "확인" in (cb.text or "") or "저장" in (cb.text or ""):
-                                                driver.execute_script("arguments[0].click();", cb)
-                                                print("[*] 다운로드 팝업 확인 클릭")
-                                                time.sleep(3)
-                                                break
-                                except Exception:
-                                    pass
-                                
-                                # 재확인
-                                current_files = set(os.listdir(download_dir))
-                                new_files = current_files - before_files
-                                for nf in new_files:
-                                    if nf.lower().endswith(".eml"):
-                                        downloaded_count += 1
-                                        print(f"[SUCCESS] 다운로드 완료: {nf}")
-                                        download_complete = True
-                                        eml_found = True
-                                        break
-                                
-                                if not download_complete:
-                                    print(f"[!] 다운로드 시간 초과: {filename}")
+                                print(f"[!] 다운로드 시간 초과: {filename}")
+                        
+                        # EML이 아닌 첨부파일의 경우 폴더 생성 및 이동
+                        if download_complete and not is_eml and downloaded_filename:
+                            import shutil
+                            eml_bank_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eml_bank")
+                            
+                            # 폴더명에 사용할 수 없는 문자 제거
+                            safe_title = re.sub(r'[\\/*?:"<>|]', "_", title).strip()
+                            if not safe_title:
+                                safe_title = f"mail_{mail_id}"
+                            
+                            target_dir = os.path.join(eml_bank_dir, safe_title)
+                            os.makedirs(target_dir, exist_ok=True)
+                            
+                            src_path = os.path.join(download_dir, downloaded_filename)
+                            dst_path = os.path.join(target_dir, downloaded_filename)
+                            
+                            try:
+                                # 파일 덮어쓰기 방지
+                                if os.path.exists(dst_path):
+                                    base, ext = os.path.splitext(downloaded_filename)
+                                    dst_path = os.path.join(target_dir, f"{base}_{int(time.time())}{ext}")
+                                shutil.move(src_path, dst_path)
+                                print(f"[*] 일반 첨부파일을 {target_dir} 이동 완료")
+                            except Exception as e:
+                                print(f"[!] 파일 이동 실패: {e}")
                     except Exception as e:
                         print(f"[!] 첨부파일 처리 오류: {e}")
                         continue

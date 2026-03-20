@@ -23,7 +23,9 @@ try:
         cmd_generate_info,
         cmd_extract_attachments,
         cmd_generate_report,
-        load_vt_api_key
+        load_vt_api_key,
+        cmd_extract_bank,
+        cmd_generate_bank_summary
     )
     from file_analysis import (
         run_analysis_on_file,
@@ -443,36 +445,71 @@ async def main_async():
         # 일괄 처리 모드 (지정된 경로 또는 기본 ./eml)
         target_dir = args.eml_path
         if not os.path.exists(target_dir):
-            print(f"\033[91m[!] Directory not found: {target_dir}\033[0m")
-            return
+            print(f"[*] Main target directory ({target_dir}) not found. Skipping main scan.")
+        else:
+            print(f"[*] Scanning directory: {target_dir}")
             
-        print(f"[*] Scanning directory: {target_dir}")
-        
-        ignored_files = ["ai_analysis.py", "file_analysis.py", ".DS_Store"]
-        ignored_extensions = [".md", ".py", ".pyc"]
-        
-        for f in sorted(os.listdir(target_dir)):
-            full_path = os.path.join(target_dir, f)
+            ignored_files = ["ai_analysis.py", "file_analysis.py", ".DS_Store"]
+            ignored_extensions = [".md", ".py", ".pyc"]
             
-            # 파일이 아니거나 .eml 형식이 아니면 건너뜀
-            if not os.path.isfile(full_path) or not f.lower().endswith('.eml'):
-                continue
+            for f in sorted(os.listdir(target_dir)):
+                full_path = os.path.join(target_dir, f)
                 
-            tasks.append(asyncio.create_task(analyze_eml_file_async(full_path, args.output_dir, vt_api_key, eml_semaphore)))
+                # 파일이 아니거나 .eml 형식이 아니면 건너뜀
+                if not os.path.isfile(full_path) or not f.lower().endswith('.eml'):
+                    continue
+                    
+                tasks.append(asyncio.create_task(analyze_eml_file_async(full_path, args.output_dir, vt_api_key, eml_semaphore)))
 
-    if not tasks:
-        print("[*] No files to analyze.")
+    # eml_bank 디렉토리 확인
+    bank_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eml_bank")
+    bank_has_files = False
+    if os.path.exists(bank_dir) and os.listdir(bank_dir):
+        bank_has_files = True
+
+    if not tasks and not bank_has_files:
+        print("[*] No files to analyze in both eml and eml_bank.")
         return
 
-    print(f"[*] Starting batch extraction and summary phase for {len(tasks)} files...")
-    # 동시성 제한 없이 asyncio.gather로 빠르게 일괄 처리 (내부적으로 semaphore로 10개만 실행)
-    results = await asyncio.gather(*tasks)
-    print("\n[*] All initial extraction and summary tasks completed.")
+    results = []
+    if tasks:
+        print(f"[*] Starting batch extraction and summary phase for {len(tasks)} files...")
+        # 동시성 제한 없이 asyncio.gather로 빠르게 일괄 처리 (내부적으로 semaphore로 10개만 실행)
+        results = await asyncio.gather(*tasks)
+        print("\n[*] Initial extraction and summary tasks for .eml completed.")
+    else:
+        print(f"[*] No files to analyze in {args.eml_path}.")
+    
+    # 2. 추가적으로 eml_bank 내의 일반 첨부파일 폴더들도 스캔하여 추출 및 분석
+    bank_folders_processed = []
+    
+    if os.path.exists(bank_dir):
+        print("\n[*] Starting batch extraction for eml_bank folders...")
+        cmd_extract_bank(bank_dir, eml_output_base)
+        cmd_generate_bank_summary(eml_output_base)
+        
+        for root, dirs, files in os.walk(eml_output_base):
+            # 최상위 폴더들만 검사
+            if root == eml_output_base:
+                for d in dirs:
+                    marker = os.path.join(root, d, "is_bank_eml.txt")
+                    if os.path.exists(marker):
+                        bank_folders_processed.append(d)
+                break
+        print(f"[*] Completed processing {len(bank_folders_processed)} eml_bank folders.")
     
     # AI 별도 비동기 실행 (모든 대상 파일에 대한 분석 후 _summary.txt 생성 완료 시점)
     if not args.preprocess and not args.reanalyze_attachments:
         processed_folders = [r for r in results if r]
-        await run_ai_analysis_async(args.output_dir, target_folders=processed_folders)
+        
+        # bank 폴더들도 AI 분석 리스트에 추가
+        processed_folders.extend(bank_folders_processed)
+        
+        # 중복 제거
+        processed_folders = list(set(processed_folders))
+        
+        if processed_folders:
+            await run_ai_analysis_async(args.output_dir, target_folders=processed_folders)
         
     print("\n[*] EML Pipeline completely finished.")
 

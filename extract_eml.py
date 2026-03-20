@@ -245,6 +245,117 @@ def cmd_extract(eml_dir, output_base):
         shutil.copy2(src_path, dest_path)
         print(f"  [+] 복사 완료: {eml_file[:30]}... -> {target_dir}")
 
+def cmd_extract_bank(bank_dir, output_base):
+    """eml_bank 에 저장된 일반 첨부파일들을 analyzed_eml 하위 폴더/attachments 로 복사합니다."""
+    if not os.path.exists(bank_dir):
+        return
+        
+    print(f"[*] 모드: extract bank (eml_bank 폴더 정리)")
+    for bank_folder in os.listdir(bank_dir):
+        bank_folder_path = os.path.join(bank_dir, bank_folder)
+        if not os.path.isdir(bank_folder_path):
+            continue
+            
+        clean_folder_name = sanitize_name(bank_folder)
+        if len(clean_folder_name) > 30:
+            import hashlib
+            short_hash = hashlib.md5(bank_folder.encode('utf-8')).hexdigest()[:8]
+            clean_folder_name = f"{clean_folder_name[:30]}..._{short_hash}"
+            
+        target_dir = os.path.join(output_base, clean_folder_name)
+        os.makedirs(target_dir, exist_ok=True)
+        
+        attach_dir = os.path.join(target_dir, "attachments")
+        os.makedirs(attach_dir, exist_ok=True)
+        
+        has_files = False
+        for file_name in os.listdir(bank_folder_path):
+            src_file = os.path.join(bank_folder_path, file_name)
+            if os.path.isfile(src_file):
+                dest_file = os.path.join(attach_dir, file_name)
+                # 동일 파일이 없으면 복사
+                if not os.path.exists(dest_file):
+                    shutil.copy2(src_file, dest_file)
+                has_files = True
+                
+        if has_files:
+            # is_bank_eml.txt 마커 생성 (info/url 등에 제외 및 전용 로직 식별용)
+            marker_path = os.path.join(target_dir, "is_bank_eml.txt")
+            with open(marker_path, 'w', encoding='utf-8') as f:
+                f.write("This folder contains non-EML attachments.")
+            print(f"  [+] eml_bank 복사 완료: {bank_folder[:30]}... -> {target_dir}/attachments")
+
+def cmd_generate_bank_summary(output_base):
+    """eml_bank에서 가져온 폴더들에 대해 첨부파일 분석(_summary.txt)을 바로 수행합니다."""
+    print(f"[*] 모드: bank summary (일반 첨부파일 요약 생성)")
+    if not os.path.exists(output_base):
+        return
+        
+    try:
+        from file_analysis import run_analysis_on_file, detect_file_type
+    except ImportError as e:
+        print(f"\033[91m  [!] file_analysis 모듈을 불러올 수 없습니다: {e}\033[0m")
+        return
+
+    for folder_name in sorted(os.listdir(output_base)):
+        folder_path = os.path.join(output_base, folder_name)
+        if not os.path.isdir(folder_path): continue
+        
+        # eml_bank 폴더 식별 마커
+        if not os.path.exists(os.path.join(folder_path, "is_bank_eml.txt")):
+            continue
+            
+        attach_dir = os.path.join(folder_path, "attachments")
+        if not os.path.exists(attach_dir):
+            continue
+            
+        print(f"  [*] 요약 생성 중: {folder_name}")
+        
+        attach_files = [f for f in os.listdir(attach_dir) if os.path.isfile(os.path.join(attach_dir, f))]
+        
+        summary_content = "===========================\n[이메일 정보]\n"
+        summary_content += "EML 파일 없음 (일반 첨부파일 추출본)\n"
+        summary_content += "===========================\n[본문 내 URL 분석 결과]\n"
+        summary_content += "해당 파일은 EML 형태가 아니므로 URL 분석 생략.\n"
+        summary_content += "===========================\n[첨부파일 분석 결과]\n"
+        
+        attach_texts = []
+        for file_name in attach_files:
+            if file_name.endswith("_file_analysis.txt"):
+                continue
+                
+            file_path = os.path.join(attach_dir, file_name)
+            f_type = detect_file_type(file_path)
+            
+            if f_type:
+                print(f"    [-] 분석 진행: {file_name} ({f_type})")
+                
+                # stderr 등 출력이 뒤섞이거나 file_analysis.py 자체 이슈를 캐치
+                try:
+                    res = run_analysis_on_file(file_path, f_type, True)
+                    if res:
+                        attach_texts.append(f"--- 파일명: {file_name} 분석 결과 ---\n{res.strip()}")
+                        safe_name, _ = os.path.splitext(file_name)
+                        res_file_path = os.path.join(attach_dir, f"{safe_name}_file_analysis.txt")
+                        with open(res_file_path, 'w', encoding='utf-8') as out_f:
+                            out_f.write(res)
+                except Exception as e:
+                    attach_texts.append(f"--- 파일명: {file_name} 분석 결과 ---\n분석 중 예기치 않은 오류 발생: {e}")
+            else:
+                attach_texts.append(f"--- 파일명: {file_name} 분석 결과 ---\n지원되지 않는 파일 형식입니다.")
+                
+        if attach_texts:
+            summary_content += "\n\n".join(attach_texts)
+        else:
+            summary_content += "분석 수행된 첨부파일이 없습니다."
+            
+        summary_content += "\n===========================\n"
+        
+        summary_out_file = os.path.join(folder_path, f"{folder_name}_summary.txt")
+        with open(summary_out_file, 'w', encoding='utf-8') as f:
+            f.write(summary_content)
+        print(f"    [+] {os.path.basename(summary_out_file)} 저장 완료")
+
 def cmd_analyze_urls(output_base, api_key):
     """2. 각 폴더의 urls.txt 파일을 읽어 VirusTotal 분석을 수행합니다."""
     print(f"[*] 모드: url (URL VirusTotal 분석)")
@@ -615,12 +726,13 @@ def main():
     parser.add_argument("--info", action="store_true", help="추출된 EML의 메일 정보(txt) 생성")
     parser.add_argument("--report", action="store_true", help="VT 분석 결과 JSON들을 취합하여 리포트(txt) 생성")
     parser.add_argument("--attach", action="store_true", help="EML 파일에서 첨부파일을 추출 (attachments 폴더 생성)")
+    parser.add_argument("--bank", action="store_true", help="eml_bank 폴더의 내용물을 추출하고 _summary.txt를 생성")
     parser.add_argument("-apikey", help="VirusTotal API Key (입력 시 config.ini보다 우선)")
     parser.add_argument("-dir", default=EML_DIR, help="원본 EML 디렉토리 (기본: ./eml/)")
     
     args = parser.parse_args()
     
-    if not (args.extract or args.url or args.info or args.list or args.report or args.attach):
+    if not (args.extract or args.url or args.info or args.list or args.report or args.attach or args.bank):
         parser.print_help()
         return
 
@@ -631,6 +743,11 @@ def main():
 
     if args.extract:
         cmd_extract(args.dir, OUTPUT_BASE_DIR)
+        cmd_extract_bank(os.path.join(SCRIPT_DIR, "eml_bank"), OUTPUT_BASE_DIR)
+        
+    if args.bank:
+        cmd_extract_bank(os.path.join(SCRIPT_DIR, "eml_bank"), OUTPUT_BASE_DIR)
+        cmd_generate_bank_summary(OUTPUT_BASE_DIR)
     
     if args.list:
         cmd_generate_list(OUTPUT_BASE_DIR)
