@@ -93,7 +93,7 @@ async def analyze_file_async(target_file, output_dir):
         analysis_content = f.read()
 
     # 2. gemini-cli 실행 (읽어온 텍스트를 입력으로 전달)
-    cmd_ai = ["gemini-cli", prompt]
+    cmd_ai = ["gemini-cli", "-m", "gemini-2.5-flash", prompt]
     ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=analysis_content)
 
     if ret_code_ai != 0:

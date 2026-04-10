@@ -147,7 +147,25 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
         
         if not os.path.exists(target_abs_path):
             print(f"\033[91m[!] File not found: {target_file}\033[0m")
-            return
+            return {"folder": None, "status": "ERROR", "filename": filename}
+
+        # 훈련용 메일 화이트리스트 예외처리 (헤더에서 X-Trellix: Whitelist 확인)
+        try:
+            with open(target_abs_path, 'rb') as f:
+                header_data = b""
+                for line in f:
+                    if line.strip() == b"": # 빈 줄을 만나면 헤더가 끝난 것으로 간주
+                        break
+                    header_data += line
+                    
+                if b"X-Trellix: Whitelist" in header_data:
+                    print(f"\n{'='*60}")
+                    print(f"\033[93m[*] [SKIP] 훈련용 메일 예외 처리 (X-Trellix: Whitelist 포함): {filename}\033[0m")
+                    print(f"{'='*60}")
+                    return {"folder": None, "status": "SKIPPED", "filename": filename}
+        except Exception as e:
+            print(f"\033[91m[!] 파일 읽기 오류 ({filename}): {e}\033[0m")
+            return {"folder": None, "status": "ERROR", "filename": filename}
 
         # 출력 디렉토리 확인/생성
         os.makedirs(output_dir_base, exist_ok=True)
@@ -195,7 +213,7 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
             actual_folder_list = os.listdir(temp_eml_output_base)
             if not actual_folder_list:
                 print(f"\033[91m[!] [{filename}] 추출된 폴더를 찾을 수 없습니다.\033[0m")
-                return
+                return {"folder": None, "status": "ERROR", "filename": filename}
             
             # 단일 EML을 분석하므로 폴더는 1개만 생성되었어야 함
             actual_folder_name = actual_folder_list[0]
@@ -249,7 +267,7 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
             f.write(ai_input_data)
         print(f"  [+] Saved AI context summary to: {os.path.basename(summary_out_file)}")
 
-        return actual_folder_name
+        return {"folder": actual_folder_name, "status": "SUCCESS", "filename": filename}
 
     # 분석 완료, 원본 EML 파일은 그대로 폴더에 유지
 
@@ -328,7 +346,7 @@ async def _process_single_ai_analysis(folder_path, folder_name, summary_file, pr
         with open(summary_file, 'r', encoding='utf-8') as f:
             summary_content = f.read()
 
-        cmd_ai = ["gemini-cli", AI_ANALYSIS_PROMPT]
+        cmd_ai = ["gemini-cli", "-m", "gemini-2.5-flash", AI_ANALYSIS_PROMPT]
         ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=summary_content)
         
         if ret_code_ai != 0:
@@ -475,7 +493,7 @@ async def main_async():
     if tasks:
         print(f"[*] Starting batch extraction and summary phase for {len(tasks)} files...")
         # 동시성 제한 없이 asyncio.gather로 빠르게 일괄 처리 (내부적으로 semaphore로 10개만 실행)
-        results = await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks, return_exceptions=True)
         print("\n[*] Initial extraction and summary tasks for .eml completed.")
     else:
         print(f"[*] No files to analyze in {args.eml_path}.")
@@ -500,7 +518,26 @@ async def main_async():
     
     # AI 별도 비동기 실행 (모든 대상 파일에 대한 분석 후 _summary.txt 생성 완료 시점)
     if not args.preprocess and not args.reanalyze_attachments:
-        processed_folders = [r for r in results if r]
+        success_files = []
+        skipped_files = []
+        error_files = []
+        processed_folders = []
+
+        for r in results:
+            if isinstance(r, Exception):
+                error_files.append(f"예상치 못한 오류 발생 ({r})")
+            elif isinstance(r, dict):
+                status = r.get("status")
+                fname = r.get("filename", "Unknown")
+                folder = r.get("folder")
+                if status == "SUCCESS":
+                    success_files.append(fname)
+                    if folder:
+                        processed_folders.append(folder)
+                elif status == "SKIPPED":
+                    skipped_files.append(fname)
+                elif status == "ERROR":
+                    error_files.append(fname)
         
         # bank 폴더들도 AI 분석 리스트에 추가
         processed_folders.extend(bank_folders_processed)
@@ -510,7 +547,26 @@ async def main_async():
         
         if processed_folders:
             await run_ai_analysis_async(args.output_dir, target_folders=processed_folders)
+
+        print("\n" + "="*60)
+        print(f"{len(results)}개 메일 분석 완료")
+        print("="*60)
         
+        if success_files:
+            print("\n* 분석 완료 메일 목록")
+            for f in success_files:
+                print(f"- {f}")
+                
+        if skipped_files:
+            print("\n* 분석 진행하지 않음 (예외처리된 메일)")
+            for f in skipped_files:
+                print(f"- {f}")
+                
+        if error_files:
+            print("\n* 분석되지 않음")
+            for f in error_files:
+                print(f"- {f}")
+                
     print("\n[*] EML Pipeline completely finished.")
 
 def main():

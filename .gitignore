@@ -13,6 +13,7 @@ analyzed_eml/
 _backup/
 _ole/
 _ole_md/
+temp/
 
 # Existing directories that should not be tracked (Analysis outputs and inputs)
 eml/
