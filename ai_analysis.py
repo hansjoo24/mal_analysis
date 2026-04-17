@@ -93,11 +93,21 @@ async def analyze_file_async(target_file, output_dir):
         analysis_content = f.read()
 
     # 2. gemini-cli 실행 (읽어온 텍스트를 입력으로 전달)
-    cmd_ai = ["gemini-cli", "-m", "gemini-2.5-flash", prompt]
-    ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=analysis_content)
+    models_to_try = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-pro", "gemini-1.5-flash"]
+    success = False
 
-    if ret_code_ai != 0:
-        print(f"[!] [{filename}] gemini-cli failed: {ai_stderr}")
+    for model in models_to_try:
+        cmd_ai = ["gemini-cli", "-m", model, prompt]
+        ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=analysis_content)
+
+        if ret_code_ai == 0:
+            success = True
+            break
+            
+        print(f"\033[93m[!] [{filename}] 모델({model}) 오류 발생, 다음 모델로 재시도합니다...\033[0m")
+
+    if not success:
+        print(f"\033[91m[!] [{filename}] 모든 모델 시도 실패: {ai_stderr}\033[0m")
         return
         
     final_result = ai_stdout

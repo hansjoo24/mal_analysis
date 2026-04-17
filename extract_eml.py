@@ -17,6 +17,7 @@ import requests
 import argparse
 import configparser
 from email.header import decode_header
+import base64
 from base64 import urlsafe_b64encode
 from urllib.parse import urlparse, urlunparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -154,6 +155,71 @@ def filter_and_deduplicate_urls(urls):
                 final_filtered_results.append(original_url)
                 
     return sorted(final_filtered_results)
+
+def load_urlscan_api_key():
+    """config.ini 파일에서 urlscan API Key를 로드합니다."""
+    if not os.path.exists(CONFIG_FILE):
+        return None
+    try:
+        config = configparser.ConfigParser()
+        config.read(CONFIG_FILE)
+        if 'urlscan' in config and 'api_key' in config['urlscan']:
+            return config['urlscan']['api_key'].strip('"').strip("'")
+    except Exception as e:
+        print(f"\033[91m[!] config.ini 로드 실패 (urlscan): {e}\033[0m")
+    return None
+
+def decode_b64_and_check_target(url, target_domains=None):
+    if target_domains is None:
+        target_domains = ["shinhan.com", "naver.com"]
+        
+    try:
+        parts = re.split(r'[/=&?]+', url)
+        for part in parts:
+            if len(part) >= 16:
+                try:
+                    padded_val = part + '=' * (-len(part) % 4)
+                    try:
+                        decoded_bytes = base64.urlsafe_b64decode(padded_val)
+                    except:
+                        decoded_bytes = base64.b64decode(padded_val)
+                    decoded_str = decoded_bytes.decode('utf-8', errors='ignore')
+                    
+                    for domain in target_domains:
+                        if domain in decoded_str:
+                            return True, decoded_str
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    return False, ""
+
+def submit_to_urlscan(url, api_key):
+    api_url = "https://urlscan.io/api/v1/scan/"
+    headers = {"API-Key": api_key, "Content-Type": "application/json"}
+    data = {"url": url, "visibility": "unlisted"}
+    try:
+        response = requests.post(api_url, headers=headers, json=data)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 429:
+            return {"error": "Rate limit exceeded"}
+        else:
+            return {"error": f"API Error ({response.status_code})", "detail": response.text}
+    except Exception as e:
+        return {"error": str(e)}
+
+def get_urlscan_result(uuid):
+    try:
+        response = requests.get(f"https://urlscan.io/api/v1/result/{uuid}/")
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            return {"status": "pending"}
+        else:
+            return {"error": f"API Error ({response.status_code})", "detail": response.text}
+    except Exception as e:
+        return {"error": str(e)}
 
 def get_vt_analysis(url, api_key, re_analyze=False):
     """VirusTotal API v3를 사용하여 URL을 검사합니다."""
@@ -395,15 +461,39 @@ def cmd_analyze_urls(output_base, api_key):
                 print(f"    [-] 분석할 URL이 없습니다.")
                 continue
 
+            urlscan_api_key = load_urlscan_api_key()
+
             cycle = 1
             while True:
                 urls_to_analyze = []
+                urlscans_to_poll = []
+                urlscans_to_submit = []
                 analysis_count = 0
+                urlscan_analysis_count = 0
                 
                 for url in urls:
                     safe_url_name = sanitize_name(url.replace("://", "_").replace("/", "_"))[:100]
                     json_path = os.path.join(folder_path, f"{safe_url_name}.json")
+                    urlscan_json_path = os.path.join(folder_path, f"{safe_url_name}_urlscan.json")
                     
+                    # --- URLScan.io 동적 분석 로직 ---
+                    if urlscan_api_key:
+                        is_target, decoded_str = decode_b64_and_check_target(url)
+                        if is_target:
+                            if os.path.exists(urlscan_json_path):
+                                try:
+                                    with open(urlscan_json_path, 'r', encoding='utf-8') as f_us:
+                                        us_data = json.load(f_us)
+                                    if "uuid" in us_data and "task" not in us_data and "error" not in us_data:
+                                        urlscans_to_poll.append((url, urlscan_json_path, us_data["uuid"]))
+                                        urlscan_analysis_count += 1
+                                except:
+                                    pass
+                            else:
+                                urlscans_to_submit.append((url, urlscan_json_path, decoded_str))
+                                urlscan_analysis_count += 1
+
+                    # --- 기존 VT 분석 로직 ---
                     skip_analysis = False
                     is_analysis = False
                     
@@ -413,7 +503,6 @@ def cmd_analyze_urls(output_base, api_key):
                                 existing_data = json.load(f_json)
                                 data_type = existing_data.get("data", {}).get("type")
                                 
-                                # 분석 중(analysis)이거나, url 타입인데 탐지 결과가 0(incomplete)인 경우 재조회
                                 is_incomplete_url = False
                                 if data_type == "url":
                                     stats = existing_data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
@@ -423,43 +512,67 @@ def cmd_analyze_urls(output_base, api_key):
                                         stats.get("undetected", 0),
                                         stats.get("harmless", 0)
                                     ])
-                                    # 모든 탐지 결과가 0이면 아직 분석이 덜 된 것으로 간주
                                     if total_detections == 0:
                                         is_incomplete_url = True
 
                                 if data_type == "analysis" or is_incomplete_url:
                                     analysis_count += 1
                                     is_analysis = True
-                                    skip_analysis = False # 다시 분석 필요
-                                    
-                                    # 너무 오래된 빈 결과면 명시적으로 재분석 요청 고려 (Optional)
-                                    # 여기서는 일단 단순 대기/재조회만 수행
+                                    skip_analysis = False
                                 else:
                                     skip_analysis = True
                                     if cycle == 1:
                                         print(f"    [-] 분석 생략 (완료된 결과 유지): {url[:40]}...")
                         except:
-                            pass # 파일 읽기 실패 시 재분석
+                            pass
                             
                     if not skip_analysis:
                         urls_to_analyze.append((url, json_path, is_analysis))
                         
-                if not urls_to_analyze:
+                if not urls_to_analyze and not urlscans_to_poll and not urlscans_to_submit:
                     if cycle > 1:
-                        print(f"    [+] 모든 URL 분석이 완료되었습니다.")
+                        print(f"    [+] 모든 URL(VT/URLScan) 분석이 완료되었습니다.")
                     break
                     
-                print(f"    [*] [Cycle {cycle}] 현재 대기중인 URL {analysis_count}개 / 전체 조사 대상 URL {len(urls)}개 / 미완료 종합 {len(urls_to_analyze)}개")
+                print(f"    [*] [Cycle {cycle}] VT 대기: {analysis_count}개 / URLScan 대기: {urlscan_analysis_count}개 / 대상: {len(urls)}개 / 미완료 종합: {len(urls_to_analyze)}")
                 
-                # 1번째 사이클이 아닐 경우(재조회 시) 10초 대기 처리
-                if cycle > 1 and analysis_count > 0:
+                if cycle > 1 and (analysis_count > 0 or urlscans_to_poll):
                     print(f"    [⏳] 10초 대기 후 상태 업데이트를 확인합니다 (최대 10회 재시도)...")
                     time.sleep(10)
                     
-                    # 무한 루프 방지를 위한 장치 (예: 10 사이클 이상이면 중단)
                     if cycle > 10:
                         print(f"\033[91m    [!] 최대 재시도 횟수 초과. 현재까지의 결과를 저장하고 종료합니다.\033[0m")
                         break
+
+                # URLScan 제출 실행 (1번째 사이클 또는 조건 만족 시)
+                for u, path, dec_str in urlscans_to_submit:
+                    print(f"    [!] Base64 인코딩된 타겟 도메인 발견: {dec_str}")
+                    print(f"    [+] urlscan.io 동적 분석 요청: {u[:40]}...")
+                    res = submit_to_urlscan(u, urlscan_api_key)
+                    with open(path, 'w', encoding='utf-8') as f_out:
+                        json.dump(res, f_out, indent=4, ensure_ascii=False)
+
+                # URLScan 결과 폴링 재조회
+                for u, path, uuid in urlscans_to_poll:
+                    if cycle > 1:
+                        print(f"    [+] urlscan.io 상태 재조회: {u[:40]}...")
+                        res = get_urlscan_result(uuid)
+                        if res.get("status") != "pending":
+                            if "error" not in res:
+                                print(f"    [+] urlscan.io 동적 분석 완료!")
+                                # --- URLScan이 추적한 최종 리다이렉트 URL을 VT 추가 분석 대상으로 등록 ---
+                                final_page_url = res.get("page", {}).get("url")
+                                if final_page_url and final_page_url != u:
+                                    print(f"    [!] 최종 리다이렉트 주소 확보 (VT 분석 자동 추가): {final_page_url[:50]}...")
+                                    if final_page_url not in urls:
+                                        urls.append(final_page_url)
+                                        # 다음 분석(또는 다음 실행)을 위해 urls_filtered.txt (또는 urls.txt)에 저장
+                                        with open(urls_txt_path, 'a', encoding='utf-8') as f_append:
+                                            f_append.write(f"\n{final_page_url}\n")
+                            else:
+                                print(f"    [-] urlscan.io 분석 오류: {res.get('error', 'Unknown Error')}")
+                            with open(path, 'w', encoding='utf-8') as f_out:
+                                json.dump(res, f_out, indent=4, ensure_ascii=False)
 
                 for url, json_path, is_analysis in urls_to_analyze:
                     if is_analysis:
@@ -613,6 +726,30 @@ def cmd_generate_report(output_base):
                 with open(json_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                 
+                # URLScan 결과 파일 확인
+                if json_file.endswith("_urlscan.json"):
+                    if "task" in data and "page" in data:
+                        target_url = data.get("page", {}).get("url", "확인 불가")
+                        result_url = data.get("task", {}).get("reportURL", "")
+                        
+                        overall_verdict = data.get("verdicts", {}).get("overall", {})
+                        is_malicious = overall_verdict.get("malicious", False)
+                        score = overall_verdict.get("score", 0)
+                        
+                        if is_malicious:
+                            risk_str = "🚨 위험 (악성 페이지)"
+                        elif score > 0:
+                            risk_str = f"⚠️ 의심 (위험 점수: {score})"
+                        else:
+                            risk_str = "✅ 안전"
+                            
+                        results.append(f"[{risk_str}] [URLScan 동적 분석] {target_url}\n    - 상세 결과 링크: {result_url}")
+                    elif "uuid" in data and "task" not in data and "error" not in data:
+                        results.append(f"[⏳ URLScan 분석 진행 중] UUID: {data.get('uuid')}\n    - 상세 정보가 아직 업데이트되지 않았습니다.")
+                    elif "error" in data:
+                        results.append(f"[!] URLScan 분석 실패: {data.get('error')}")
+                    continue
+
                 # VT 결과 구조 확인
                 if data.get("data", {}).get("type") == "url":
                     attr = data["data"]["attributes"]

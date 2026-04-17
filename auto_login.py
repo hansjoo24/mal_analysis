@@ -188,6 +188,7 @@ def create_driver(config):
         download_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eml")
         os.makedirs(download_dir, exist_ok=True)
         prefs = {
+            "profile.default_content_setting_values.automatic_downloads": 1,
             "download.default_directory": download_dir,
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,

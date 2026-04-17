@@ -49,7 +49,14 @@ AI_ANALYSIS_PROMPT = """
 
 # 2. 메일 평판 분석 결과
 - 메일의 송신자 정보, SPF 인증 정보, DKIM 서명 정보를 확인하여 평판을 분석하고 신뢰할 수 있는지 판단해줘. 
-### 1) 정상 / 악성 이메일 확률 분류 (정상 확률 n% / 악성 확률 n%)
+### 1) 정상 / 악성 이메일 분류
+- 해당 메일 or 첨부파일을 (악성 / 주의 / 정상) 으로 분류해줘
+- 분류기준
+    - URL 분석 결과 위험한 URL이 포함되어 있다 >> 무조건 악성
+    - 첨부파일 분석 결과 중 VirusTotal 에서 해시 조회 했을 때 Malicious가 하나라도 있으면 >> 악성
+    - 메일 내 URL, 첨부파일이 없다 >> 무조건 정상
+    - 이외의 경우 (의심스러운 부분이 존재 하는 경우) >> 주의로 구분
+
 ### 2) 기업/도메인 평판 (DKIM 서명 도메인이 알려진 도메인인지, 송신자 기업 정보 등 구체적 서술)
 ### 3) SPF/DKIM 인증 정보 분석 종합
 
@@ -346,11 +353,21 @@ async def _process_single_ai_analysis(folder_path, folder_name, summary_file, pr
         with open(summary_file, 'r', encoding='utf-8') as f:
             summary_content = f.read()
 
-        cmd_ai = ["gemini-cli", "-m", "gemini-2.5-flash", AI_ANALYSIS_PROMPT]
-        ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=summary_content)
-        
-        if ret_code_ai != 0:
-            print(f"\033[91m  [!] gemini-cli failed for {folder_name}: {ai_stderr}\033[0m")
+        models_to_try = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-pro", "gemini-1.5-flash"]
+        success = False
+
+        for model in models_to_try:
+            cmd_ai = ["gemini-cli", "-m", model, AI_ANALYSIS_PROMPT]
+            ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=summary_content)
+            
+            if ret_code_ai == 0:
+                success = True
+                break
+                
+            print(f"\033[93m  [!] 모델({model}) 분석 오류 발생, 다음 모델로 재시도합니다... ({folder_name})\033[0m")
+
+        if not success:
+            print(f"\033[91m  [!] 모든 모델 시도 실패 for {folder_name}: {ai_stderr}\033[0m")
             return
             
         ai_md_file = os.path.join(folder_path, f"{folder_name}_ai.md")
