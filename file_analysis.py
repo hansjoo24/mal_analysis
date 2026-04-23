@@ -37,7 +37,8 @@ def analyze_pdf(target_file):
     pdfid, peepdf, strings 도구를 사용하여 분석합니다.
     """
     # Step 1: pdfid
-    cmd1 = f"pdfid '{target_file}'"
+    # --literalfilenames 옵션을 추가하여 대괄호 등 특수문자가 들어간 파일명을 glob 경로로 인식하지 않도록 설정
+    cmd1 = f"pdfid --literalfilenames '{target_file}'"
     run_command(cmd1, "PDFID Analysis")
 
     # Step 2: pdf-parser
