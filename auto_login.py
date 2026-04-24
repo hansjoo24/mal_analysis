@@ -183,6 +183,7 @@ def create_driver(config):
         # SSL 인증서 오류 무시 (사내망 등)
         options.add_argument("--ignore-certificate-errors")
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        options.add_experimental_option("detach", True)  # 브라우저 유지 옵션
         
         # 다운로드 디렉토리 설정
         download_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "eml")
@@ -223,6 +224,7 @@ def create_driver(config):
         if headless:
             options.add_argument("--headless=new")
         options.add_argument("--ignore-certificate-errors")
+        options.add_experimental_option("detach", True)  # 브라우저 유지 옵션
         driver = webdriver.Edge(options=options)
     
     else:
@@ -994,15 +996,7 @@ def main():
         except Exception as e:
             print(f"[!] EML 다운로드 중 오류: {e}")
         
-        # 브라우저 유지
-        print("\n[*] 브라우저를 유지합니다. 수동으로 닫아주세요.")
-        print("[*] (자동 종료를 원하시면 Enter를 누르세요)")
-        try:
-            input()
-            driver.quit()
-            print("[*] 브라우저 종료.")
-        except (KeyboardInterrupt, EOFError):
-            pass
+        print("\n[*] 다운로드가 완료되었습니다. 브라우저를 유지한 채 다음 단계를 진행합니다.")
     else:
         print("\n[FAIL] 로그인에 실패했습니다. config.ini 설정을 확인해주세요.")
         print("   특히 CSS 셀렉터가 실제 페이지 구조와 맞는지 확인이 필요합니다.")

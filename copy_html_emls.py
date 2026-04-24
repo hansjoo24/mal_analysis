@@ -63,13 +63,13 @@ def main():
                     dest_path = os.path.join(dest_dir, f"{base_name}_{idx}{ext}")
                     idx += 1
                 
-                shutil.copy2(eml_path, dest_path)
-                print(f"  [+] Copied: {file}")
+                shutil.move(eml_path, dest_path)
+                print(f"  [+] Moved: {file} -> eml_html/")
                 count += 1
         except Exception as e:
-            pass
+            print(f"  [!] Error processing {file}: {e}")
 
-    print(f"\n[*] Total files copied: {count}")
+    print(f"\n[*] Total files moved: {count}")
 
 if __name__ == "__main__":
     main()

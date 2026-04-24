@@ -123,19 +123,28 @@ def main():
     print("[*] Kali VM에 접속하여 eml_analysis.py를 실행합니다...")
     print(f"[*] Command: {' '.join(command)}\n")
     
-    try:
-        # subprocess.run을 사용하여 실시간으로 출력을 터미널에 표시
-        result = subprocess.run(command)
-        
-        if result.returncode == 0:
-            print("\n[+] 스크립트 실행이 성공적으로 완료되었습니다.")
-        else:
-            print(f"\n[-] 스크립트 실행 중 문제가 발생했습니다. (Exit status: {result.returncode})")
+    while True:
+        try:
+            # subprocess.run을 사용하여 실시간으로 출력을 터미널에 표시
+            result = subprocess.run(command)
             
-    except FileNotFoundError:
-        print("[-] ssh 명령어를 찾을 수 없습니다. Windows에 OpenSSH 클라이언트가 설치되어 있는지 확인해주세요.")
-    except Exception as e:
-        print(f"[-] 예외가 발생했습니다: {e}")
+            if result.returncode == 0:
+                print("\n[+] 스크립트 실행이 성공적으로 완료되었습니다.")
+                break
+            else:
+                print(f"\n[-] 스크립트 실행 중 문제가 발생했습니다. (Exit status: {result.returncode})")
+                print("[-] SSH 연결에 실패했을 수 있습니다. VM이 켜져 있는지 확인해주세요.")
+                ans = input("[?] 다시 시도하시겠습니까? (엔터: 재시도, n 입력 시 종료): ").strip()
+                if ans.lower() == 'n':
+                    print("[*] 종료합니다.")
+                    break
+                
+        except FileNotFoundError:
+            print("[-] ssh 명령어를 찾을 수 없습니다. Windows에 OpenSSH 클라이언트가 설치되어 있는지 확인해주세요.")
+            break
+        except Exception as e:
+            print(f"[-] 예외가 발생했습니다: {e}")
+            break
 
 if __name__ == "__main__":
     main()
