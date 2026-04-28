@@ -34,7 +34,8 @@ URL_PATTERN = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-
 # 필터링 제외 키워드 및 확장자
 EXCLUDE_EXTENSIONS = {
     '.png', '.jpg', '.jpeg', '.gif', '.svg', '.css', 
-    '.woff', '.woff2', '.ttf', '.eot', '.otf', '.ico', '.webp'
+    '.woff', '.woff2', '.ttf', '.eot', '.otf', '.ico', '.webp',
+    '.json', '.xml'
 }
 EXCLUDE_DOMAINS = {
     'w3.org', 'schemas.microsoft.com', 'schemas.openxmlformats.org', 'purl.org',
@@ -123,6 +124,9 @@ def filter_and_deduplicate_urls(urls):
     if not initial_filtered:
         return []
 
+    if len(initial_filtered) > 50:
+        return ["TOO_MANY_URLS"]
+
     # 2단계/3단계: 병렬 리다이렉트 추적 및 최종 도메인 필터링
     print(f"    [*] 3단계 필터링 진행 중 ({len(initial_filtered)}개 URL, 병렬)...")
     
@@ -150,11 +154,15 @@ def filter_and_deduplicate_urls(urls):
                 if pure_url not in seen_pure_urls:
                     seen_pure_urls.add(pure_url)
                     final_filtered_results.append(original_url)
+                    # 리다이렉트가 발생하여 최종 주소가 다를 경우, 둘 다 분석 대상에 포함
+                    if final_target_url != original_url:
+                        final_filtered_results.append(final_target_url)
             except Exception as e:
                 print(f"\033[91m    [!] 오류 ({original_url[:30]}): {e}\033[0m")
                 final_filtered_results.append(original_url)
                 
-    return sorted(final_filtered_results)
+    # 원본과 리다이렉트 URL들이 섞여있을 수 중복 제거 후 반환
+    return sorted(list(set(final_filtered_results)))
 
 def load_urlscan_api_key():
     """config.ini 파일에서 urlscan API Key를 로드합니다."""
@@ -162,7 +170,7 @@ def load_urlscan_api_key():
         return None
     try:
         config = configparser.ConfigParser()
-        config.read(CONFIG_FILE)
+        config.read(CONFIG_FILE, encoding='utf-8')
         if 'urlscan' in config and 'api_key' in config['urlscan']:
             return config['urlscan']['api_key'].strip('"').strip("'")
     except Exception as e:
@@ -270,7 +278,7 @@ def load_vt_api_key():
     
     try:
         config = configparser.ConfigParser()
-        config.read(CONFIG_FILE)
+        config.read(CONFIG_FILE, encoding='utf-8')
         if 'virusTotal' in config and 'api_key' in config['virusTotal']:
             # 따옴표가 포함되어 있을 수 있으므로 제거
             return config['virusTotal']['api_key'].strip('"').strip("'")
@@ -628,19 +636,25 @@ def cmd_generate_list(output_base):
             filtered_urls = filter_and_deduplicate_urls(urls)
             filtered_txt_path = os.path.join(folder_path, "urls_filtered.txt")
             url_none_path = os.path.join(folder_path, "url_none.txt")
+            url_too_many_path = os.path.join(folder_path, "url_too_many.txt")
             
             # 이전 파일들 정리 (재실행 시 꼬이지 않도록)
             if os.path.exists(filtered_txt_path): os.remove(filtered_txt_path)
             if os.path.exists(url_none_path): os.remove(url_none_path)
+            if os.path.exists(url_too_many_path): os.remove(url_too_many_path)
             
-            if filtered_urls:
+            if filtered_urls and len(filtered_urls) == 1 and filtered_urls[0] == "TOO_MANY_URLS":
+                with open(url_too_many_path, 'w', encoding='utf-8') as f_many:
+                    f_many.write('Too many URLs found (>50).\n')
+                print(f"    [!] URL이 50개를 초과하여 VT 분석을 생략하도록 마커 생성")
+            elif filtered_urls:
                 with open(filtered_txt_path, 'w', encoding='utf-8') as f_furls:
                     f_furls.write('\n'.join(filtered_urls) + '\n')
             else:
                 with open(url_none_path, 'w', encoding='utf-8') as f_none:
                     f_none.write('No URLs found after filtering.\n')
                 
-            print(f"    [+] URL 리스트 저장 완료: 원본({len(urls)}) / 필터링({len(filtered_urls)})")
+            print(f"    [+] URL 리스트 저장 완료: 원본({len(urls)}) / 필터링({len(filtered_urls) if not (filtered_urls and len(filtered_urls) == 1 and filtered_urls[0] == 'TOO_MANY_URLS') else '>50'})")
         except Exception as e:
             print(f"\033[91m    [!] 오류 발생: {e}\033[0m")
 

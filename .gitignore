@@ -30,3 +30,4 @@ _old_md/
 *.tmp
 .DS_Store
 eml_html/
+.gemini/

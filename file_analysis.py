@@ -42,8 +42,8 @@ def analyze_pdf(target_file):
     run_command(cmd1, "PDFID Analysis")
 
     # Step 2: pdf-parser
-    cmd2 = f"echo 'tree' | python2 /usr/local/bin/peepdf -if '{target_file}'" 
-    run_command(cmd2, "Pee-pdf Stats Analysis")
+    cmd2 = f"pdf-parser -a '{target_file}'" 
+    run_command(cmd2, "PDF Parser Analysis")
 
     # Step 3: strings & grep
     # 정규식 패턴 앞에 r을 붙여서 Raw String으로 처리 (SyntaxWarning 해결)

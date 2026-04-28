@@ -35,10 +35,13 @@ except ImportError as e:
     print(f"\033[91m[!] 필수 모듈을 찾을 수 없습니다: {e}\033[0m")
     sys.exit(1)
 
+# 현재 스크립트 실행 위치를 기준으로 상대 경로 지정
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # 분석 결과가 최종 저장될 디렉토리 경로
-output_path = "/mnt/hgfs/Suspicious_File/analysis_result/"
+output_path = os.path.join(SCRIPT_DIR, "analysis_result")
 # EML 추출물을 임시/중간 저장할 베이스 디렉토리
-eml_output_base = "/mnt/hgfs/Suspicious_File/analyzed_eml/"
+eml_output_base = os.path.join(SCRIPT_DIR, "analyzed_eml")
 
 # AI 분석용 공통 프롬프트
 AI_ANALYSIS_PROMPT = """
@@ -210,12 +213,7 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
             cmd_extract_attachments(temp_eml_output_base)
             print(f"  [-] Generating Email Info...")
             cmd_generate_info(temp_eml_output_base)
-            print(f"  [-] Analyzing URLs via VirusTotal...")
-            cmd_analyze_urls(temp_eml_output_base, vt_api_key)
-            print(f"  [-] Generating VT Report...")
-            cmd_generate_report(temp_eml_output_base)
             
-            # 2. 결과 텍스트 읽어오기 및 AI에게 전달할 종합 Context 문자열 구성
             # extract_eml이 생성한 실제 폴더명 찾기
             actual_folder_list = os.listdir(temp_eml_output_base)
             if not actual_folder_list:
@@ -225,6 +223,25 @@ async def analyze_eml_file_async(target_file, output_dir_base, vt_api_key, semap
             # 단일 EML을 분석하므로 폴더는 1개만 생성되었어야 함
             actual_folder_name = actual_folder_list[0]
             extracted_folder = os.path.join(temp_eml_output_base, actual_folder_name)
+            
+            if os.path.exists(os.path.join(extracted_folder, "url_too_many.txt")):
+                print(f"\n{'='*60}")
+                print(f"\033[93m[*] [SKIP] URL 50개 초과로 VT 및 AI 분석을 생략합니다: {filename}\033[0m")
+                print(f"{'='*60}")
+                
+                final_extracted_folder = os.path.join(eml_output_base, actual_folder_name)
+                if os.path.exists(final_extracted_folder):
+                    await asyncio.to_thread(shutil.rmtree, final_extracted_folder)
+                await asyncio.to_thread(shutil.move, extracted_folder, final_extracted_folder)
+                
+                return {"folder": None, "status": "TOO_MANY_URLS", "filename": filename}
+
+            print(f"  [-] Analyzing URLs via VirusTotal...")
+            cmd_analyze_urls(temp_eml_output_base, vt_api_key)
+            print(f"  [-] Generating VT Report...")
+            cmd_generate_report(temp_eml_output_base)
+            
+            # 2. 결과 텍스트 읽어오기 및 AI에게 전달할 종합 Context 문자열 구성
             
             # --- 2.1 첨부파일 개별 분석 (file_analysis.py 연동) ---
             attach_dir = os.path.join(extracted_folder, "attachments")
@@ -353,11 +370,11 @@ async def _process_single_ai_analysis(folder_path, folder_name, summary_file, pr
         with open(summary_file, 'r', encoding='utf-8') as f:
             summary_content = f.read()
 
-        models_to_try = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-pro", "gemini-1.5-flash"]
+        models_to_try = ["gemini-3.1-pro-preview", "gemini-3-flash-preview", "gemini-3.1-flash-lite-preview", "gemini-2.5-pro", "gemini-2.5-flash"]
         success = False
 
         for model in models_to_try:
-            cmd_ai = ["gemini-cli", "-m", model, AI_ANALYSIS_PROMPT]
+            cmd_ai = ["gemini", "-m", model, AI_ANALYSIS_PROMPT]
             ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=summary_content)
             
             if ret_code_ai == 0:
@@ -537,6 +554,7 @@ async def main_async():
     if not args.preprocess and not args.reanalyze_attachments:
         success_files = []
         skipped_files = []
+        too_many_url_files = []
         error_files = []
         processed_folders = []
 
@@ -553,6 +571,8 @@ async def main_async():
                         processed_folders.append(folder)
                 elif status == "SKIPPED":
                     skipped_files.append(fname)
+                elif status == "TOO_MANY_URLS":
+                    too_many_url_files.append(fname)
                 elif status == "ERROR":
                     error_files.append(fname)
         
@@ -577,6 +597,11 @@ async def main_async():
         if skipped_files:
             print("\n* 분석 진행하지 않음 (예외처리된 메일)")
             for f in skipped_files:
+                print(f"- {f}")
+                
+        if too_many_url_files:
+            print("\n* 분석 패스됨 (URL 50개 초과, VT 및 AI 분석 생략)")
+            for f in too_many_url_files:
                 print(f"- {f}")
                 
         if error_files:

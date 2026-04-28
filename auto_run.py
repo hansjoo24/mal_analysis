@@ -112,15 +112,20 @@ def main():
     # 2. auto_login.py 실행 (Window Local)
     run_local_autologin()   
 
-    # 3. SSH 접속 및 eml_analysis.py 명령어 실행 (Kali VM)
+    # 3. Docker 컨테이너 실행 및 eml_analysis.py 명령어 실행
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    gemini_dir = os.path.join(base_dir, ".gemini")
+
     command = [
-        "ssh",
-        "-t", # 가상 터미널 할당 (인터랙티브 프로그램 실행 시 필요할 수 있음)
-        "kali@192.168.31.131",
-        "cd /mnt/hgfs/Suspicious_File && python eml_analysis.py"
+        "docker", "run", "--rm", "-it",
+        "-v", f"{base_dir}:/app",
+        "-v", f"{gemini_dir}:/root/.gemini",
+        "-w", "/app",
+        "kali-linux",
+        "python3", "eml_analysis.py"
     ]
     
-    print("[*] Kali VM에 접속하여 eml_analysis.py를 실행합니다...")
+    print("[*] Docker 컨테이너(kali-linux)를 실행하여 eml_analysis.py를 수행합니다...")
     print(f"[*] Command: {' '.join(command)}\n")
     
     while True:
@@ -133,14 +138,14 @@ def main():
                 break
             else:
                 print(f"\n[-] 스크립트 실행 중 문제가 발생했습니다. (Exit status: {result.returncode})")
-                print("[-] SSH 연결에 실패했을 수 있습니다. VM이 켜져 있는지 확인해주세요.")
+                print("[-] Docker 실행에 실패했을 수 있습니다. Docker 데스크톱이 켜져 있는지 확인해주세요.")
                 ans = input("[?] 다시 시도하시겠습니까? (엔터: 재시도, n 입력 시 종료): ").strip()
                 if ans.lower() == 'n':
                     print("[*] 종료합니다.")
                     break
                 
         except FileNotFoundError:
-            print("[-] ssh 명령어를 찾을 수 없습니다. Windows에 OpenSSH 클라이언트가 설치되어 있는지 확인해주세요.")
+            print("[-] docker 명령어를 찾을 수 없습니다. Windows에 Docker가 설치되어 있는지 확인해주세요.")
             break
         except Exception as e:
             print(f"[-] 예외가 발생했습니다: {e}")
