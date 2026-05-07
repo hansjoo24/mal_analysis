@@ -1,7 +1,6 @@
-AIzaSyCKKJJpdaXLVzpUxSufuZei4cLdyFLUyGY
-AIzaSyA6-eWMn29bBlVol_ZV4bu2g6qvP6TmfI0
-AIzaSyASFSeS5NBV9EPMgL_lJoXiJWzAqIlNcMc
-AIzaSyCoFeXJzusrfuEegL9k8WFZMI2vPVVbJss
-AIzaSyD_gCpyR7A1BC_b73gTj2gjyjnYDhZiYMk
-
-# 본 문서 아래쪽에 다른 설정할 API 키들을 한 줄씩 추가해 주세요. (이 주석줄은 지우셔도 됩니다)
+AIzaSyC710hB_SFBBg_xFwycOznKG378sKKUCTA
+AIzaSyALALml8Oxk20GB8gf8FA2DtPFKoqm7xN0
+AIzaSyC665mBxAv2igAJlggKv9JJCfxJD5fuFBw
+AIzaSyBlktcX6FP7ixQv8CggT9Y27UGHHuL7ays
+AIzaSyBVV2zvQ2l2ukpQfGFcJWoCW0emAoEs_yA
+AIzaSyAl1URLe14oYmBqEnKaj4_D_Bm6j4UHfRM

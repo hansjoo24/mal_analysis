@@ -974,11 +974,27 @@ def download_eml_attachments(driver):
                     try:
                         safe_domains = _load_safe_domains()
                         raw_links = driver.execute_script("""
+                            var urls = [];
+
+                            // 1단계: 부모 프레임(#mainContentWrap)에서 URL 수집
                             var wrap = document.querySelector('#mainContentWrap');
-                            if (!wrap) return [];
-                            return Array.from(wrap.querySelectorAll('a[href]'))
-                                        .map(function(a) { return a.href; })
-                                        .filter(function(h) { return h.startsWith('http'); });
+                            if (wrap) {
+                                Array.from(wrap.querySelectorAll('a[href]')).forEach(function(a) {
+                                    if (a.href && a.href.startsWith('http')) urls.push(a.href);
+                                });
+                            }
+
+                            // 2단계: iframe(#messageContentFrame) 내부로 진입하여 URL 수집
+                            try {
+                                var iframe = document.querySelector('#messageContentFrame');
+                                if (iframe && iframe.contentDocument) {
+                                    Array.from(iframe.contentDocument.querySelectorAll('a[href]')).forEach(function(a) {
+                                        if (a.href && a.href.startsWith('http')) urls.push(a.href);
+                                    });
+                                }
+                            } catch(e) { /* cross-origin 차단 시 무시 */ }
+
+                            return urls;
                         """)
                         # 안전 도메인, 이미지 URL 필터링 + 스마트 정규화 + 도메인별 샘플링(최대 5개)
                         unique_set = set()
@@ -988,7 +1004,10 @@ def download_eml_attachments(driver):
                             import base64
                             import binascii
                             import re
-                            base = url.split('?')[0].split('#')[0].rstrip('/')
+                            if '@shinhan.com' in url.lower():
+                                base = url.rstrip('/')
+                            else:
+                                base = url.split('?')[0].split('#')[0].rstrip('/')
                             prefix = "/v2/click/"
                             if prefix in base:
                                 try:

@@ -167,6 +167,8 @@ def get_file_type(filepath):
         '.dll': 'PE32 dynamic-link library',
         '.ppt': 'Microsoft PowerPoint (Legacy Binary)',
         '.pptx': 'Microsoft PowerPoint (OpenXML / ZIP archive)',
+        '.html': 'HTML document',
+        '.htm': 'HTML document',
     }
     return type_map.get(ext, f'Unknown file type (extension: {ext})')
 
@@ -190,13 +192,20 @@ def run_external_command(command_list, description, timeout=45):
         with tempfile.NamedTemporaryFile(mode='w+', delete=False, encoding='utf-8') as temp_out:
             temp_out_path = temp_out.name
 
+        # 현재 환경 변수를 복사하고 UTF-8 모드 강제 설정 추가
+        env = os.environ.copy()
+        env["PYTHONUTF8"] = "1"
+        env["PYTHONIOENCODING"] = "utf-8"
+
         with open(temp_out_path, 'w+', encoding='utf-8', errors='replace') as f_out:
             subprocess.run(
                 command_list,
                 stdout=f_out,
                 stderr=subprocess.STDOUT,
                 timeout=timeout,
-                text=True
+                text=True,
+                encoding='utf-8',
+                env=env
             )
             
         with open(temp_out_path, 'r', encoding='utf-8', errors='replace') as f_in:
@@ -739,6 +748,38 @@ def analyze_ppt(target_file):
             print(f"    {m}")
     else:
         print("[*] 의심스러운 문자열이 발견되지 않았습니다.")
+
+
+def analyze_html(target_file):
+    """
+    HTML 파일 정적 분석을 수행합니다.
+    """
+    print(f"\n{'='*60}")
+    print(f"[+] 실행 중: HTML 구조 및 정적 패턴 검사")
+    print(f"{'='*60}\n")
+    
+    file_type_str = get_file_type(target_file)
+    print(f"[*] 파일 확장자: {file_type_str}")
+
+    print(f"\n{'='*60}")
+    print(f"[+] 실행 중: 의심스러운 문자열/패턴 추출 (HTML)")
+    print(f"{'='*60}\n")
+
+    all_strings = extract_strings(target_file)
+    pattern = r'(?i)<script|<iframe|window\.location|document\.location|%unescape|https?://|javascript:|base64'
+    matches = grep_patterns(all_strings, pattern)
+    
+    if matches:
+        limit = 20
+        print(f"[*] {len(matches)}개의 의심스러운 스크립트/URL 패턴 발견:")
+        for m in matches[:limit]:
+            # 너무 긴 문자열은 자르기
+            print(f"    {m[:150]}")
+        if len(matches) > limit:
+            print(f"    ... 그 외 {len(matches)-limit}개 생략")
+    else:
+        print("[*] 의심스러운 HTML 패턴이 발견되지 않았습니다.")
+
 # ============================================================
 # URL 평판 조회 함수
 # ============================================================
@@ -1055,6 +1096,7 @@ def main():
     group.add_argument("-ppt", dest="ppt_filename", help="Path to the suspicious PowerPoint file")
     group.add_argument("-img", dest="img_filename", help="Path to the suspicious Image file")
     group.add_argument("-exe", dest="exe_filename", help="Path to the suspicious EXE file")
+    group.add_argument("-html", dest="html_filename", help="Path to the suspicious HTML file")
     group.add_argument("-file", dest="generic_filename", help="Path to any suspicious file (auto-detect)")
     group.add_argument("-urls", dest="urls_filename", help="Path to urls.txt for URL reputation analysis")
 
@@ -1108,6 +1150,9 @@ def main():
     elif args.ppt_filename:
         target_file = args.ppt_filename
         file_type = 'ppt'
+    elif args.html_filename:
+        target_file = args.html_filename
+        file_type = 'html'
     elif args.generic_filename:
         target_file = args.generic_filename
         # Auto-detect file type based on extension
@@ -1124,6 +1169,8 @@ def main():
             file_type = 'exe'
         elif ext in ['.ppt', '.pptx', '.pptm', '.potx', '.pps', '.ppsx']:
             file_type = 'ppt'
+        elif ext in ['.html', '.htm']:
+            file_type = 'html'
         else:
             print(f"[!] Unsupported file extension: {ext}")
             sys.exit(1)
@@ -1170,6 +1217,8 @@ def main():
         analyze_exe(target_file)
     elif file_type == 'ppt':
         analyze_ppt(target_file)
+    elif file_type == 'html':
+        analyze_html(target_file)
 
 
 def analyze_file_as_dict(target_file, file_type=None, deep_analysis=False):
@@ -1192,6 +1241,8 @@ def analyze_file_as_dict(target_file, file_type=None, deep_analysis=False):
             file_type = 'exe'
         elif ext in ['.ppt', '.pptx', '.pptm', '.potx', '.pps', '.ppsx']:
             file_type = 'ppt'
+        elif ext in ['.html', '.htm']:
+            file_type = 'html'
         else:
             return {"status": "error", "message": f"Unsupported file extension: {ext}"}
 
@@ -1214,6 +1265,8 @@ def analyze_file_as_dict(target_file, file_type=None, deep_analysis=False):
             analyze_exe(target_file)
         elif file_type == 'ppt':
             analyze_ppt(target_file)
+        elif file_type == 'html':
+            analyze_html(target_file)
     finally:
         sys.stdout = old_stdout
         sys.stderr = old_stderr
