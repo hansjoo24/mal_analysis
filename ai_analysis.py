@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Windows cp949 인코딩 문제 방지 (스크립트 최상단에서 설정)
+# Windows cp949 인코딩 문제 방지 (스크립트 최상단에서 설정)###
 import os
 os.environ["PYTHONUTF8"] = "1"
 os.environ["PYTHONIOENCODING"] = "utf-8"
