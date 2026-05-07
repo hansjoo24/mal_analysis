@@ -4,9 +4,7 @@
 
 # Google 계열
 google.com
-googleapis.com
 gstatic.com
-googleusercontent.com
 googlevideo.com
 googletagmanager.com
 google-analytics.com
@@ -18,8 +16,6 @@ live.com
 outlook.com
 office365.com
 microsoftonline.com
-azure.com
-windows.net
 bing.com
 msn.com
 
@@ -29,7 +25,6 @@ icloud.com
 
 # Amazon / AWS
 amazon.com
-amazonaws.com
 amazonses.com
 
 # 자사 도메인
@@ -48,6 +43,7 @@ tiktok.com
 github.com
 stackoverflow.com
 npmjs.com
+fortinet.com
 
 # 이메일 서비스
 mailchimp.com

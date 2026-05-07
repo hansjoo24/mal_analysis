@@ -116,153 +116,9 @@ def get_daily_usage_count():
         return 0
     except Exception:
         return 0
-# ─────────────────────────────────────────────
-# API 키 동적 로테이션 매니저 (Smart Rotation)
-# ─────────────────────────────────────────────
-import time as _time
-
-class ApiKeyManager:
-    """
-    API 키의 상태(OK/BLOCKED)와 마지막 사용 시각을 추적하여,
-    사용 가능한 키를 동적으로 선택하고 오류를 전용 로그에 기록합니다.
-    """
-    RPM_PER_KEY = 5  # Gemini 무료 티어: 분당 5회
-    MIN_INTERVAL = 12.5  # 60초 / 5RPM = 12초 (안전 마진 포함 12.5초)
-
-    def __init__(self):
-        self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.settings_path = os.path.expanduser("~/.gemini/settings.json")
-        self.api_keys_path = os.path.join(self.script_dir, "api_keys.txt")
-        self.error_log_path = os.path.join(self.script_dir, "gemini_api_key_errors.log")
-        self.keys_exhausted = False
-        
-        # 키 로드
-        self.keys = self._load_keys()
-        # 각 키의 상태: {key: {"status": "OK"|"BLOCKED", "last_used": float, "blocked_at": float|None}}
-        self.key_states = {}
-        for k in self.keys:
-            self.key_states[k] = {"status": "OK", "last_used": 0.0, "blocked_at": None}
-        
-        print(f"[*] ApiKeyManager 초기화: {len(self.keys)}개 키 로드됨")
-
-    def _load_keys(self):
-        """api_keys.txt에서 키 목록을 로드합니다."""
-        if not os.path.exists(self.api_keys_path):
-            return []
-        try:
-            with open(self.api_keys_path, 'r', encoding='utf-8') as f:
-                return [line.strip() for line in f if line.strip() and not line.startswith('#')]
-        except Exception:
-            return []
-
-    def _apply_key(self, key):
-        """선택된 키를 settings.json과 환경변수에 적용합니다."""
-        try:
-            data = {}
-            if os.path.exists(self.settings_path):
-                with open(self.settings_path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-            data["apiKey"] = key
-            with open(self.settings_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=4)
-            os.environ["GEMINI_API_KEY"] = key
-        except Exception as e:
-            print(f"[!] 키 적용 실패: {e}")
-
-    def get_available_key(self):
-        """
-        사용 가능한(OK 상태) 키 중에서, 마지막 사용으로부터 가장 오래된 키를 선택합니다.
-        모든 키가 BLOCKED이면 None을 반환하고 keys_exhausted를 True로 설정합니다.
-        """
-        available = [
-            (k, s) for k, s in self.key_states.items() if s["status"] == "OK"
-        ]
-        if not available:
-            self.keys_exhausted = True
-            print("[!] 모든 API 키가 차단(BLOCKED) 상태입니다.")
-            return None
-
-        # 마지막 사용 시각이 가장 오래된(가장 쉬고 있는) 키 선택
-        available.sort(key=lambda x: x[1]["last_used"])
-        best_key = available[0][0]
-        
-        self._apply_key(best_key)
-        print(f"[*] Using key: {best_key[:12]}...")
-        return best_key
-
-    def mark_used(self, key):
-        """성공적으로 사용한 키의 마지막 사용 시각을 갱신합니다."""
-        if key in self.key_states:
-            self.key_states[key]["last_used"] = _time.time()
-
-    def mark_blocked(self, key, reason="429 Quota Exceeded"):
-        """
-        429/Quota 에러가 발생한 키를 BLOCKED 상태로 전환하고 오류 로그를 기록합니다.
-        """
-        if key not in self.key_states:
-            return
-        self.key_states[key]["status"] = "BLOCKED"
-        self.key_states[key]["blocked_at"] = _time.time()
-        
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_msg = f"[{timestamp}] KEY: {key[:12]}... | STATUS: BLOCKED | REASON: {reason}"
-        print(f"[!] {log_msg}")
-        
-        # 전용 오류 로그 파일에 기록
-        try:
-            with open(self.error_log_path, 'a', encoding='utf-8') as f:
-                f.write(log_msg + "\n")
-        except Exception:
-            pass
-
-        # 다음 사용 가능한 키가 있는지 확인하고 로그
-        available = [k for k, s in self.key_states.items() if s["status"] == "OK"]
-        if available:
-            failover_key = available[0]
-            try:
-                with open(self.error_log_path, 'a', encoding='utf-8') as f:
-                    f.write(f"[{timestamp}] KEY: {failover_key[:12]}... | STATUS: OK → ACTIVE (failover)\n")
-            except Exception:
-                pass
-        else:
-            self.keys_exhausted = True
-
-    def get_ok_key_count(self):
-        """현재 OK 상태인 키의 개수를 반환합니다."""
-        return sum(1 for s in self.key_states.values() if s["status"] == "OK")
-
-    def get_optimal_delay(self):
-        """
-        사용 가능한 키 수에 따라 최적 대기 시간을 계산합니다.
-        키가 많을수록 대기 시간이 짧아집니다.
-        """
-        ok_count = self.get_ok_key_count()
-        if ok_count <= 0:
-            return 13  # fallback
-        # 각 키가 분당 5회 가능 → 총 분당 (ok_count * 5)회 가능
-        # 안전 마진 20% 추가
-        delay = (60.0 / (ok_count * self.RPM_PER_KEY)) * 1.2
-        # 최소 2초, 최대 13초로 클램핑
-        return max(2.0, min(delay, 13.0))
-
-    def get_wait_for_key(self, key):
-        """
-        특정 키를 사용하려면 얼마나 기다려야 하는지 계산합니다.
-        마지막 사용 시각으로부터 MIN_INTERVAL이 경과하지 않았으면 남은 시간을 반환합니다.
-        """
-        if key not in self.key_states:
-            return 0
-        elapsed = _time.time() - self.key_states[key]["last_used"]
-        if elapsed >= self.MIN_INTERVAL:
-            return 0
-        return self.MIN_INTERVAL - elapsed
-
-
-# 전역 매니저 인스턴스 생성
-key_manager = ApiKeyManager()
-
-# 하위 호환성을 위한 플래그 (기존 코드에서 참조하는 부분 대응)
 api_keys_exhausted = False
+last_rotation_time = 0.0
+rotation_lock = asyncio.Lock()
 
 def translate_if_english(text):
     """지나치게 많은 영어가 포함된 AI 응답을 5000자 제한을 피해 청크 단위로 분할하여 한글로 번역합니다."""
@@ -308,31 +164,49 @@ def translate_if_english(text):
             
     return text
 
-async def run_command_async(cmd_list, input_data=None, max_retries=5, retry_delay=20):
-    """
-    서브프로세스 명령어를 비동기적으로 실행합니다. (동적 키 로테이션 + 재시도 로직)
-    반환값: (returncode, stdout, stderr)
-    """
+def rotate_api_key():
+    settings_path = os.path.expanduser("~/.gemini/settings.json")
+    api_keys_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_keys.txt")
+    
+    try:
+        if not os.path.exists(api_keys_path):
+            return False
+            
+        with open(api_keys_path, "r", encoding="utf-8") as f:
+            keys = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+            
+        if not keys:
+            return False
+            
+        with open(settings_path, "r", encoding="utf-8") as f:
+            settings = json.load(f)
+            
+        current_key = settings.get("apiKey", "")
+        
+        try:
+            current_idx = keys.index(current_key)
+            next_idx = (current_idx + 1) % len(keys)
+        except ValueError:
+            next_idx = 0
+            
+        new_key = keys[next_idx]
+        settings["apiKey"] = new_key
+        os.environ["GEMINI_API_KEY"] = new_key
+        
+        with open(settings_path, "w", encoding="utf-8") as f:
+            json.dump(settings, f, indent=4)
+            
+        print(f"\n[*] API Key Automatically Rotated! (New Key ends with: ...{new_key[-5:]})")
+        return True
+    except Exception as e:
+        print(f"[!] API Key Rotation failed: {e}")
+        return False
+
+async def run_command_async(cmd_list, input_data=None, max_retries=6, retry_delay=20):
     global api_keys_exhausted
-    current_key = None
     
     for attempt in range(max_retries + 1):
         try:
-            # Gemini 명령어인 경우, 사용 가능한 키를 선택하고 필요 시 대기
-            is_gemini = "gemini" in cmd_list[0].lower()
-            if is_gemini:
-                current_key = key_manager.get_available_key()
-                if current_key is None:
-                    api_keys_exhausted = True
-                    return -1, "", "All API keys exhausted"
-                
-                # 해당 키의 RPM 제한 대기
-                wait_needed = key_manager.get_wait_for_key(current_key)
-                if wait_needed > 0:
-                    print(f"[*] 키 RPM 대기: {wait_needed:.1f}s (KEY: {current_key[:12]}...)")
-                    await asyncio.sleep(wait_needed)
-            
-            # Windows에서 하위 프로세스도 UTF-8을 사용하도록 환경변수 설정
             env = os.environ.copy()
             env["PYTHONUTF8"] = "1"
             env["PYTHONIOENCODING"] = "utf-8"
@@ -349,30 +223,36 @@ async def run_command_async(cmd_list, input_data=None, max_retries=5, retry_dela
             stdout_str = stdout.decode('utf-8', errors='replace').strip()
             stderr_str = stderr.decode('utf-8', errors='replace').strip()
             
-            # Gemini Quota Exceeded (429) 감지 및 동적 키 전환
-            full_output = stdout_str + stderr_str
-            if is_gemini and ("429" in full_output or "Quota exceeded" in full_output or "exhausted" in full_output.lower()):
-                if attempt < max_retries and current_key:
-                    # 현재 키를 BLOCKED 처리
-                    reason = "429 Quota Exceeded" if "429" in full_output else "Quota/Key Exhausted"
-                    key_manager.mark_blocked(current_key, reason=reason)
-                    
-                    # 다른 사용 가능한 키가 있으면 즉시 재시도
-                    next_key = key_manager.get_available_key()
-                    if next_key:
-                        print(f"[*] Failover: 다른 키로 즉시 재시도 (Attempt {attempt + 1}/{max_retries})")
-                        current_key = next_key
-                        continue
+            if "gemini" in cmd_list[0].lower():
+                full_output = stdout_str + stderr_str
+                # 429 한도 초과, 503 서버 혼잡 등 발생 시 강제 로테이션 시도
+                if "429" in full_output or "503" in full_output or "Quota exceeded" in full_output or "exhausted" in full_output.lower():
+                    if attempt < max_retries:
+                        print(f"[*] API Error Detected (429/503). Waiting for retry window... (Attempt {attempt + 1}/{max_retries})")
+                        
+                        import time
+                        global last_rotation_time
+                        
+                        async with rotation_lock:
+                            # 만약 다른 스레드가 방금(3초 이내) 키를 바꿨다면, 나는 교체하지 않고 그냥 바뀐 키로 재시도
+                            if time.time() - last_rotation_time < 3.0:
+                                await asyncio.sleep(2)
+                                continue
+                                
+                            print(f"[*] Attempting actual key rotation...")
+                            if rotate_api_key():
+                                last_rotation_time = time.time()
+                                await asyncio.sleep(2)
+                                continue
+                            else:
+                                print(f"[*] Key rotation unavailable. Retrying in {retry_delay}s...")
+                                await asyncio.sleep(retry_delay)
+                                continue
                     else:
                         api_keys_exhausted = True
-                        key_manager.keys_exhausted = True
-                        print("[!] 모든 API 키의 한도가 소진되었습니다.")
-                        return -1, "", "All API keys exhausted"
-            
-            # 성공 시 키 사용 시각 갱신
-            if is_gemini and current_key:
-                key_manager.mark_used(current_key)
-            
+                        print("[!] API 한도 및 모든 재시도가 소진되었습니다.")
+                        return -1, "", "API keys exhausted"
+                        
             return process.returncode, stdout_str, stderr_str
 
         except Exception as e:
@@ -381,11 +261,8 @@ async def run_command_async(cmd_list, input_data=None, max_retries=5, retry_dela
                 await asyncio.sleep(retry_delay)
                 continue
             return -1, "", str(e)
-    
-    api_keys_exhausted = True
-    key_manager.keys_exhausted = True
-    print("[!] Max retries exceeded. 모든 API 키의 한도가 소진되었습니다.")
-    return -1, "", "Max retries exceeded - API keys exhausted"
+            
+    return -1, "", "Max retries exceeded"
 
 async def analyze_file_async(target_file, output_dir_base):
     # 나중에 안전하게 이동하기 위해 절대 경로가 필요합니다.
@@ -394,7 +271,7 @@ async def analyze_file_async(target_file, output_dir_base):
     
     if not os.path.exists(target_abs_path):
         print(f"[!] File not found: {target_file}")
-        return
+        return False
 
 
     # Define the prompt
@@ -480,14 +357,14 @@ If the log shows it's a PNG image, your output should look exactly like this:
     file_analysis_script = os.path.join(script_dir, "file_analysis.py")
     if not os.path.exists(file_analysis_script):
         print(f"[!] file_analysis.py not found at: {file_analysis_script}")
-        return
+        return False
 
     print(f"[*] [START] Analyzing: {filename}")
     
     # API 키가 모두 소진된 경우 즉시 스킵
-    if api_keys_exhausted or key_manager.keys_exhausted:
+    if api_keys_exhausted:
         print(f"  [-] Skipped (API keys exhausted): {filename}")
-        return
+        return False
     
     # 중복 분석 방지: 이미 분석된 결과 보고서가 존재하는지 날짜 앞자리와 무관하게 패턴(glob)으로 확인
     base_name_no_ext = os.path.splitext(filename)[0].strip()
@@ -502,7 +379,7 @@ If the log shows it's a PNG image, your output should look exactly like this:
     # AI 보고서가 존재할 때만 스킵 (이전에 파일 분석만 되고 AI 분석이 실패/누락된 경우 재시도하기 위해)
     if glob.glob(report_pattern):
         print(f"  [-] Skipped (Already analyzed): {filename}")
-        return
+        return False
 
     # ── 폴더 내 분석 대상 파일 수 체크 ──────────────────────────────────
     LARGE_ATTACHMENT_THRESHOLD = 3
@@ -548,12 +425,12 @@ If the log shows it's a PNG image, your output should look exactly like this:
                 analysis_stdout = f.read()
         except Exception as e:
             print(f"[!] [{filename}] Failed to read generated analysis report: {e}")
-            return
+            return False
 
         # 파일 수 3개 이상이면 AI 리포트 없이 종료
         if is_large_folder:
             print(f"  [-] Skipped AI report (Large folder: {len(sibling_files)} files in {os.path.basename(target_dir)})")
-            return
+            return False
     else:
         # 1. file_analysis.py 모듈 직접 호출
         target_dir = os.path.dirname(target_abs_path)
@@ -565,13 +442,13 @@ If the log shows it's a PNG image, your output should look exactly like this:
             
             if result_dict.get("status") == "error":
                 print(f"[!] [{filename}] file_analysis.py module failed: {result_dict.get('message')}")
-                return
+                return False
             
             analysis_stdout = result_dict.get("raw_analysis_log", "")
             
             if not analysis_stdout:
                 print(f"[!] [{filename}] file_analysis.py did not generate expected report output.")
-                return
+                return False
                 
             # 로그를 .md 파일로도 백업 저장 (기존 동작 유지)
             date_str_local = datetime.datetime.now().strftime("%y%m%d")
@@ -586,11 +463,11 @@ If the log shows it's a PNG image, your output should look exactly like this:
             # 파일 수 3개 이상이면 AI 리포트 없이 종료 (file_analysis만 실행됨)
             if is_large_folder:
                 print(f"  [-] Skipped AI report (Large folder: {len(sibling_files)} files in {os.path.basename(target_dir)})")
-                return
+                return False
                 
         except Exception as e:
             print(f"[!] [{filename}] Failed to run file_analysis module: {e}")
-            return
+            return False
         finally:
             if script_dir in sys.path:
                 sys.path.remove(script_dir)
@@ -610,7 +487,7 @@ If the log shows it's a PNG image, your output should look exactly like this:
         
     if not gemini_cmd:
         print(f"[!] [{filename}] gemini command not found in PATH.")
-        return
+        return False
 
     cmd_ai = [gemini_cmd, "--model", "gemini-2.5-flash"]
     # 프롬프트를 인자로 전달하면 Windows CMD에서 멀티라인(줄바꿈) 포맷이 파괴되어 
@@ -642,6 +519,7 @@ If the log shows it's a PNG image, your output should look exactly like this:
         print(f"[+] [{filename}] AI Report saved to: {report_path}")
     except IOError as e:
         print(f"[!] [{filename}] Failed to write AI report: {e}")
+    return True
 
 
 async def analyze_urls_async(urls_file, output_dir_base):
@@ -654,7 +532,7 @@ async def analyze_urls_async(urls_file, output_dir_base):
     
     if not os.path.exists(urls_abs_path):
         print(f"[!] URL file not found: {urls_file}")
-        return
+        return False
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_analysis_script = os.path.join(script_dir, "file_analysis.py")
@@ -663,16 +541,16 @@ async def analyze_urls_async(urls_file, output_dir_base):
     print(f"[*] [START] URL Analysis: {folder_name}")
     
     # API 키가 모두 소진된 경우 즉시 스킵
-    if api_keys_exhausted or key_manager.keys_exhausted:
+    if api_keys_exhausted:
         print(f"  [-] Skipped (API keys exhausted): {folder_name}")
-        return
+        return False
 
     # 중복 분석 방지
     date_str = datetime.datetime.now().strftime("%y%m%d")
     report_pattern = os.path.join(glob.escape(target_dir), "*_url_ai_analysis_report.md")
     if glob.glob(report_pattern):
         print(f"  [-] Skipped (URL already analyzed): {folder_name}")
-        return
+        return False
 
     # 1. file_analysis.py -urls 모듈 직접 호출
     md_pattern = os.path.join(glob.escape(target_dir), "*_url_analysis.md")
@@ -686,7 +564,7 @@ async def analyze_urls_async(urls_file, output_dir_base):
                 analysis_stdout = f.read()
         except Exception as e:
             print(f"[!] [{folder_name}] Failed to read URL analysis report: {e}")
-            return
+            return False
     else:
         try:
             # -urls 플래그를 사용하여 독립 서브프로세스로 안전하게 실행
@@ -695,13 +573,13 @@ async def analyze_urls_async(urls_file, output_dir_base):
             
             if ret_code != 0:
                 print(f"[!] [{folder_name}] file_analysis.py sub-process failed: {stderr}")
-                return
+                return False
                 
             analysis_stdout = stdout
             
             if not analysis_stdout:
                 print(f"[!] [{folder_name}] file_analysis.py did not generate URL analysis report.")
-                return
+                return False
                 
             # 로그를 .md 파일로 예약 백업
             date_str_local = datetime.datetime.now().strftime("%y%m%d")
@@ -715,7 +593,7 @@ async def analyze_urls_async(urls_file, output_dir_base):
                 
         except Exception as e:
             print(f"[!] [{folder_name}] Failed to run file_analysis sub-process for URLs: {e}")
-            return
+            return False
 
     # URL 분석용 프롬프트 로드
     url_prompt_path = os.path.join(script_dir, "prompt", "url분석.md")
@@ -750,7 +628,7 @@ YOUR ONLY PURPOSE IS TO FILL IN THE [REQUIRED TEMPLATE] BELOW.
         gemini_cmd = shutil.which("gemini")
     if not gemini_cmd:
         print(f"[!] [{folder_name}] gemini command not found in PATH.")
-        return
+        return False
 
     cmd_ai = [gemini_cmd, "--model", "gemini-2.5-flash"]
     ret_code_ai, ai_stdout, ai_stderr = await run_command_async(cmd_ai, input_data=combined_input)
@@ -777,6 +655,7 @@ YOUR ONLY PURPOSE IS TO FILL IN THE [REQUIRED TEMPLATE] BELOW.
         print(f"[+] [{folder_name}] URL AI Report saved to: {report_path}")
     except IOError as e:
         print(f"[!] [{folder_name}] Failed to write URL AI report: {e}")
+    return True
 
 
 
@@ -813,7 +692,7 @@ async def main_async():
                         total = 0
                         for eml_file in sorted(eml_files):
                             eml_path = os.path.join(eml_dir, eml_file)
-                            count, folder, _, _, _ = extract_attachments(eml_path, scan_dir)
+                            count, folder, *_ = extract_attachments(eml_path, scan_dir)
                             total += count
                         if total > 0:
                             print(f"[*] Extracted {total} attachment(s) from EML files.\n")
@@ -829,7 +708,7 @@ async def main_async():
         print(f"[*] Scanning directory (recursive): {scan_dir}")
         
         ignored_files = ["ai_analysis.py", "file_analysis.py", "extract_attachments.py", ".DS_Store"]
-        ignored_extensions = [".md", ".py", ".pyc", ".txt", ".log", ".ini", ".eml"]
+        ignored_extensions = [".md", ".py", ".pyc", ".txt", ".log", ".ini", ".eml", ".zip"]
         ignored_dirs = {"analyzed", "ai_analysis_report", "instruction_output", "__pycache__"}
         
         for root, dirs, files in os.walk(scan_dir):
@@ -868,38 +747,33 @@ async def main_async():
     all_tasks = tasks + url_tasks
     total_items = len(all_tasks)
     
-    # 동적 대기 시간 계산 (사용 가능한 키 수 기반)
-    initial_delay = key_manager.get_optimal_delay()
-    ok_keys = key_manager.get_ok_key_count()
-    expected_time_sec = int(total_items * initial_delay)
+    delay_sec = 12.0
+    expected_time_sec = int(total_items * delay_sec)
     minutes = expected_time_sec // 60
     seconds = expected_time_sec % 60
     time_str = f"{minutes}분 {seconds}초" if minutes > 0 else f"{seconds}초"
     
     print("\n" + "!" * 60)
     print(f" [분석 요약] 총 {total_items}건 (파일 {len(tasks)}개, URL {len(url_tasks)}개)")
-    print(f" [사용 가능 키] {ok_keys}개 (동적 대기: {initial_delay:.1f}초/건)")
-    print(f" [예상 소요 시간] 약 {time_str}")
+    print(f" [예상 소요 시간] 최대 약 {time_str} (AI 스킵 건은 대기 없이 즉시 진행)")
     print("!" * 60 + "\n")
     
-    print(f"\n[*] Found {total_items} item(s). Smart rotation active ({ok_keys} keys)...\n")
-    
     for i, task in enumerate(all_tasks):
-        await task
+        used_api = await task
         
-        # API 키가 모두 소진된 경우 나머지 파일 처리를 중단
-        if api_keys_exhausted or key_manager.keys_exhausted:
+        if api_keys_exhausted:
             remaining = total_items - i - 1
             if remaining > 0:
-                print(f"\n[!] API 키 한도가 모두 소진되어 나머지 {remaining}개 항목 분석을 중단합니다.")
+                print(f"\n[!] API 호출 한도가 모두 소진되어 나머지 {remaining}개 항목 분석을 중단합니다.")
                 print("[!] API 한도가 초기화된 후 다시 실행하면 미완료 항목부터 이어서 분석합니다.")
             break
         
         if i < total_items - 1:
-            # 매 요청마다 사용 가능한 키 수에 따라 동적 대기 시간 재계산
-            dynamic_delay = key_manager.get_optimal_delay()
-            print(f"[*] Waiting {dynamic_delay:.1f}s (OK keys: {key_manager.get_ok_key_count()})...")
-            await asyncio.sleep(dynamic_delay)
+            if used_api:
+                print(f"[*] Waiting {delay_sec}s for API rate limit (5 requests / min)...")
+                await asyncio.sleep(delay_sec)
+            else:
+                print(f"[*] AI 스킵 건 - 대기 없이 다음 항목으로 진행합니다.")
             
     print("\n[*] All analysis tasks completed.")
 
