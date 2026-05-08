@@ -3,3 +3,4 @@ config.ini
 eml/
 attachfiles/
 gemini_api_usage.log
+.gemini_api_count.txt
