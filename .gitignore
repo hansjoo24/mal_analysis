@@ -5,3 +5,4 @@ attachfiles/
 gemini_api_usage.log
 .gemini_api_count.txt
 totalurls.txt
+__pycache__/*

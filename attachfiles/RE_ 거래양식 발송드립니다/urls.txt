@@ -1,7 +1,0 @@
-http://track.shinhan.com/main/servlet/LinkTraceEC.do
-http://track.shinhan.com/main/servlet/ReceiveConfirmEC.do
-https://img.shinhan.com/sbank2016/form/20200413000000520002WF00003000000005.PDF
-https://img.shinhan.com/sbank2016/form/20210423000000720004WF00001000000001.PDF
-https://shared-mail-api.office.hiworks.com/v3/joeunelectro.co.kr/mails/confirm/joeunelectro.co.kr_925760_69fc288d816d5/jieyoung@shinhan.com
-https://track.shinhan.com/main/servlet/LinkTraceEC.do
-https://track.shinhan.com/main/servlet/ReceiveConfirmEC.do
