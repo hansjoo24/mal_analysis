@@ -1,0 +1,423 @@
+Return-path: <bounces+60788408-8f84-fherrera=shinhan.com@em8966.businessandtrends.com.mx>
+Received: from [192.168.10.200] ([192.168.10.200]) 
+          by nmailtmbs2p.shinhan.com ([192.168.10.52]) 
+          with ESMTP id 1778195211.550543.140289274017536.nmailtmbs2p
+          for <fherrera@shinhan.com>; 
+          Fri, 08 May 2026 08:06:51 +0900 (KST) 
+Received: from localhost.localdomain (localhost [127.0.0.1])
+	by Email-APT2.localdomain (Postfix) with SMTP id 4gBSYl3tccz6vjjQ
+	for <fherrera@shinhan.com>; Fri, 08 May 2026 08:06:51 +0900 (KST)
+Received: from nmailsp2p.shinhan.com (unknown [192.168.10.200])
+	by Email-APT2.localdomain (Postfix) with ESMTP id 4gBSYR4zMbz6vjhZ
+	for <fherrera@shinhan.com>; Fri, 08 May 2026 08:06:35 +0900 (KST)
+Received-SPF: Pass 
+	client-ip="134.128.98.217" envelope-from="bounces+60788408-8f84-fherrera=shinhan.com@em8966.businessandtrends.com.mx" 
+Received: from [134.128.98.217] ([134.128.98.217]) 
+          by nmailsp2p.shinhan.com ([192.168.10.94]) 
+          with ESMTP id 1778195192.6947.140645993408256.nmailsp2p
+          for <fherrera@shinhan.com>; 
+          Fri, 08 May 2026 08:06:32 +0900 (KST) 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=businessandtrends.com.mx;
+	h=content-type:date:from:mime-version:subject:to:cc:content-type:date:
+	from:subject:to;
+	s=s1; t=1778195191;
+	bh=8KbBAXiHrNKkcQjpH90pqiWUNg5UFm0GLGMdRfQgEWU=;
+	b=UVSIgUptcZP32F5XJZvNVH4+fjHTiAhkySB/Zka0SiFXTKLp8CRj4Prj2CKizRXbduBV
+	pdcbli91icdJh55yp6d4OLUTD45pmJgODiKtl86m+8MWIckTk+Wk4lART16rN2S7iwOTqM
+	KgVNEgjcdWnCtWhrP3oViGMYO+5xCQjtIbmFZXJoVwZsY0eYC/jpUGtFGVYgtkeKy5SvZf
+	CV5T9CiD3ljuMdfvaHv6gP+TUeImawFhQUsfJbVVjn0CFAtvgTHTQGL0Gphj4T6GQIvODF
+	jMAWhVUZ2EBR4hsLVtrfhLd5U2pgNY+hxgcmF0v275Gx5h1Wl85IJ7hrJv6ZZqhA==
+Received: by recvd-5b4fcf68c-k6jxc with SMTP id recvd-5b4fcf68c-k6jxc-1-69FD1AF7-6
+	2026-05-07 23:06:31.228200679 +0000 UTC m=+783150.641189330
+Received: from NjA3ODg0MDg (unknown)
+	by geopod-ismtpd-115 (SG) with HTTP
+	id DefLoFSURF61HBaTXW85kw
+	Thu, 07 May 2026 23:06:31.209 +0000 (UTC)
+Content-Type: multipart/alternative; boundary=3d5140e115e4e6c20fa7030ec5962a756ba4d285ae59483860b43c49a3b5
+Date: Thu, 07 May 2026 23:06:31 +0000 (UTC)
+X-Trellix: Clean
+From: Arturo Rocha <arturo.rocha@businessandtrends.com.mx>
+Mime-Version: 1.0
+Message-ID: <DefLoFSURF61HBaTXW85kw@geopod-ismtpd-115>
+Subject: Francisco Herrera, Acceso exclusivo | ESG Forum
+ =?UTF-8?B?TcOpeGljbw==?= 2026
+X-TERRACE-DUMMYSUBJECT: Terrace Spam system                                  *
+X-SG-EID: 
+ =?us-ascii?Q?u001=2EO9NB0tuyc2XqBd9qQFLj3t0UzQD=2Fg+P7Aa6Vu5SpruijtJtZhwqpHhifT?=
+ =?us-ascii?Q?b9wcZETBQ9WTCiP7aW3H2RV2QbqSn9tDFSuNHo9?=
+ =?us-ascii?Q?vrim8FE5Oikj+XLkWEAPNaifDbQnS3YnQnWmwnS?=
+ =?us-ascii?Q?+3KNBzsCY0juFiGGAVtoQ2v8SwYdktp3ZaSgDA2?=
+ =?us-ascii?Q?CUneQJoy+ktV4FVsTIlXtbKKTuxlFsoZjIHeocJ?=
+ =?us-ascii?Q?P75ZbEMMF5MvgiiqauOJtFJq45yqs=2FJp7LkgkKc?=
+ =?us-ascii?Q?qL4KKHSnsoqNnJQwkoJDZh2wYQ=3D=3D?=
+X-SG-ID: 
+ =?us-ascii?Q?u001=2ESdBcvi+Evd=2FbQef8eZF3BpTL9BgbK5wfSJMJGMsmprDxZV2yuLVA6AGnz?=
+ =?us-ascii?Q?yJD4NS5jd23qCAqjkCbQNp6w8h5vuSHE8B2WV=2FH?=
+ =?us-ascii?Q?wW8n5QcWUF8PHxiS+diTpCTWAjWksaigurll+i4?=
+ =?us-ascii?Q?5vAdCjl27CWLDbLZ3MlN=2FTXcS2W2dShoM9=2FJ9Y0?=
+ =?us-ascii?Q?lAiUYRR=2FflTYB59JmYf0JeuCzekdnq8hrol4qMv?=
+ =?us-ascii?Q?Kt9coqK8elg5gg0139yOpp0pM3LRzZ0hxOzGf1Y?=
+ =?us-ascii?Q?mGo7Uk7gqqzz7DL+swQ3o9x7ocVlZC1DWElXWOw?=
+ =?us-ascii?Q?IMqFynL+NAcoSkQYiWitklHUZNc3CiDJNJ9km7G?=
+ =?us-ascii?Q?mIZr9P7wJwgVSqAdE3DbZvKizZxkWyPQ4=3D?=
+To: fherrera@shinhan.com
+X-Entity-ID: u001.nxh089tQGVvXghAbhQ9U2A==
+X-TERRACE-SPAMMARK: NO       (SR:3.00)                     
+  (by Terrace)                                                   
+X-TERRACE-SID: 1778195211.550543.140289274017536.nmailtmbs2p
+
+--3d5140e115e4e6c20fa7030ec5962a756ba4d285ae59483860b43c49a3b5
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+
+Francisco excelente d=C3=ADa y gusto en saludarte por esta v=C3=ADa.
+
+Desde el equipo de *B2B Medea* , reconociendo tu rol actual y potencial int=
+er=C3=A9s en el tema:
+
+Queremos extenderte un *acceso exclusivo* al *ESG Forum M=C3=A9xico 2026* ,=
+ reservado =C3=BAnicamente para perfiles que hoy est=C3=A1n tomando decisio=
+nes clave en sostenibilidad, estrategia y transformaci=C3=B3n empresarial.
+
+Tu rol dentro de tu organizaci=C3=B3n te posiciona como un actor clave en e=
+sta conversaci=C3=B3n, por lo que te hacemos llegar una invitaci=C3=B3n par=
+a que nos acompa=C3=B1es en este foro:
+
+=F0=9F=93=8D *Jueves 28 de mayo*
+
+=F0=9F=93=8D *Terraza Polanco, Central W, CDMX* ( https://u60788408.ct.send=
+grid.net/ls/click?upn=3Du001.-2B4PAQppqDPeA-2BNfK6rGH6ptQeZTLbp6uOw4aheK4EW=
+NFlK46FETt-2F9lUQQF4PZEE3AY1M9EhwaqlsZkL5m5qjg-3D-3D76ld_o-2FHwpNrucO-2F412=
+UNy797P40hJBwZqFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybS=
+celCqDIX3NV-2Fv6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FW=
+A0MgFTMWRNBhNW-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdif=
+JqR6ZvqxmPJFtmbW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokX=
+hwO8CD3PmmEc-2Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-=
+2FfgZ0dpYg4akOtuH0Vi8QY-2Bl1OXId-2BdLY-2Ft2sl1784VltAStjCtJgGpj0D8dZdxtUAxG=
+vBMMKujGqPWNB-2BRsKGsJyXLnhb0dYCY-2BLcmzOw2-2BQjqqeR7w8iIYz-2FYInhApAVVQl8j=
+EmxcmpphuqYbTvnz902BJdZhg-3D-3D ) , Ferrocarril de Cuernavaca 214, Polanco =
+I. Secc.
+
+En d=C3=B3nde, de la mano de directores y l=C3=ADderes de industria estarem=
+os abordando lo que realmente est=C3=A1 marcando la agenda ESG en M=C3=A9xi=
+co:
+
+* *Qu=C3=A9 est=C3=A1 generando resultados en las organizaciones*
+* *C=C3=B3mo convertir la sostenibilidad en una ventaja competitiva*
+* *D=C3=B3nde est=C3=A1n las oportunidades reales de negocio*
+* *Y c=C3=B3mo las empresas est=C3=A1n pasando de la estrategia a la ejecuc=
+i=C3=B3n*
+
+Junto con las conversaciones de mayor impacto en el ecosistema de Sostenibi=
+lidad en el pa=C3=ADs:
+
+Transici=C3=B3n Energ=C3=A9tica, Electromovilidad, Agua 2023, Tecnolog=C3=
+=ADa /IA Sostenible, Nearshoring y Cambio Clim=C3=A1tico, Econom=C3=ADa Cir=
+cular, Agricultura Regenerativa, Monitoreo Ambiental, Auditor=C3=ADas y Reg=
+ulaci=C3=B3n normativa, entre otros...
+
+( https://u60788408.ct.sendgrid.net/ls/click?upn=3Du001.-2B4PAQppqDPeA-2BNf=
+K6rGH6pgwFcKXHKSiFTCnlqrrEKeBb7rHU77hGo-2FrjQaJDKubO2uCllZzFWPuT-2FdgRM8mIw=
+Wub5ihS9lY4IxV62D-2Bj-2B1TiS5gcQHRffEvHqJkTvpNdwG__o-2FHwpNrucO-2F412UNy797=
+P40hJBwZqFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybScelCqD=
+IX3NV-2Fv6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FWA0MgFT=
+MWRNBhNW-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdifJqR6Zv=
+qxmPJFtmbW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokXhwO8CD=
+3PmmEc-2Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-2FfgZ0=
+dpYg4omUMkNtWs7uOz19coabrdLR5t-2BS0jpNEOLtA55zfGaazX4FvlL2t0-2BYr5mriW0TNTm=
+74EO7bwfLHEF1PVWW4naceUiuUrJmJtyPA62-2B2tgV1I45nSXlXYGGv3Z6XNDTo3CGYvfyMWco=
+RZ5vrbxXNZA-3D-3D )
+
+En conjunto con Directores de Empresas e Instituciones como: *TetraPak, Coc=
+a Cola, CONAGUA, SEDEMA, Iconn (Seven Eleven), EY, Banorte, entre muchas ot=
+ras.*
+
+No es s=C3=B3lo un evento empresarial.
+
+Es un espacio dise=C3=B1ado para conocer *tendencias de mayor impacto en el=
+ tema* , conversaciones estrat=C3=A9gicas y conexiones estrat=C3=A9gicas co=
+n l=C3=ADderes del ecosistema.
+
+=F0=9F=91=89 *Acceso exclusivo por invitaci=C3=B3n (cupo limitado):* ENLACE=
+ PRE-REGISTRO (Francisco Herrera) ( https://u60788408.ct.sendgrid.net/ls/cl=
+ick?upn=3Du001.-2B4PAQppqDPeA-2BNfK6rGH6o3clPsX6neZtzOnbG0zSARNBLjIu-2Fg0U4=
+eDiINCkaghT5679ktoyPCWliLi7qu70g-3D-3DeG5A_o-2FHwpNrucO-2F412UNy797P40hJBwZ=
+qFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybScelCqDIX3NV-2F=
+v6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FWA0MgFTMWRNBhNW=
+-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdifJqR6ZvqxmPJFtm=
+bW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokXhwO8CD3PmmEc-2=
+Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-2FfgZ0dpYg4puw=
+NYFr-2BtGB5G65HsBe4RUvVSymlvA23N7nI17avaovjlyEh6r8jeD0yPqpjGQYUCEc4gdy9fn8l=
+DiG4Hb26HfkVXNu21XdTmyLvgOYoL4y329E4P6IZsJjVab2TSHozILOtMM9ULsJMqkEwPOfVtg-=
+3D-3D )
+
+Te recordamos que la cortes=C3=ADa otorgada es de manera exclusiva e intran=
+sferible.
+
+Tras validar tu informaci=C3=B3n del pre-registro, te estaremos haciendo ll=
+egar tu confirmaci=C3=B3n de acceso y posteriormente: reservando tu lugar e=
+n el evento.
+
+Te recordamos que este es un evento de invitaci=C3=B3n exclusiva por lo que=
+ te pedimos confirmar tu asistencia lo antes posible, idealmente *antes del=
+ Mi=C3=A9rcoles 13 de Mayo* , ya que el *cupo es limitado.*
+
+*Para B2B Medea va a ser todo un gusto contar con tu presencia. =C2=A1Segui=
+mos en contacto!*
+
+*Reservado a Cupo Limitado*.
+
+Si tienes alguna duda o deseas coordinar una breve llamada para conocer m=
+=C3=A1s detalles, con gusto te atendemos:
+
+Calendly (15 min): https://u60788408.ct.sendgrid.net/ls/click?upn=3Du001.-2=
+B4PAQppqDPeA-2BNfK6rGH6l2gk0q2vaq4L-2FKT9YajhvbQp-2Bjgws-2Fa6GLnVBnsvVQ-2Fl=
+tew5doe3-2FnlzZDs6g065KjGShMMjnZPJNyLLRUPIKzSjayb7rp3pzwbT1fhstLEy54r_o-2FH=
+wpNrucO-2F412UNy797P40hJBwZqFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkF=
+C6A28SKfn1ybScelCqDIX3NV-2Fv6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8=
+cAAG8kSdi-2FWA0MgFTMWRNBhNW-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsW=
+K-2FmSXh8bdifJqR6ZvqxmPJFtmbW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY=
+4EpRWy4KstokXhwO8CD3PmmEc-2Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabn=
+SBmstOEGsvv0-2FfgZ0dpYg4NAbrTMbSQskg5rZ-2FEkxjcyLs-2FdEmVtVrTbhtAUm6A8NT5mG=
+s0cilQB3omKn3tLz9YpYrmetP657uF5z-2BPjWsA5Hv6V4s9nxZQwMSpKtVDy94j1iqRyms9l5n=
+JCXgk1JUos-2BKDRcz9dcR2uwGLq2TJg-3D-3D ( https://u60788408.ct.sendgrid.net/=
+ls/click?upn=3Du001.-2B4PAQppqDPeA-2BNfK6rGH6lU2HdIuN1QEhDhkBKG-2BmAJCjl1MQ=
+gJyQbWDecqzWARo86OXeBE3eBCsprsQmSP3Yw-3D-3D9Pz9_o-2FHwpNrucO-2F412UNy797P40=
+hJBwZqFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybScelCqDIX3=
+NV-2Fv6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FWA0MgFTMWR=
+NBhNW-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdifJqR6Zvqxm=
+PJFtmbW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokXhwO8CD3Pm=
+mEc-2Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-2FfgZ0dpY=
+g4YqNIPd449hOcKXqeXvaMM6Dux-2F2z-2FhmDZlW69gJCKni9oj68GN277aLHYjdlB9EKF-2Bs=
+FgMMv-2BhLplYu25U1e3SV2a6n3GMHAegQfg5enyhPFBqFjpgdc8NRfH1-2FMelJkgiyVZDhXP1=
+yo4JPlFEmUIA-3D-3D )
+
+*Equipo B2B MEDEA*
+
+=F0=9F=93=9E *56 5011 2857*
+--3d5140e115e4e6c20fa7030ec5962a756ba4d285ae59483860b43c49a3b5
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=utf-8
+Mime-Version: 1.0
+
+<html>
+<head>
+  <meta http-equiv=3D"Content-Type" content=3D"text/html;charset=3DUTF-8">
+  <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D=
+1.0">
+</head>
+
+<body style=3D"margin:0; padding:0; background-color:#ffffff; font-family:A=
+rial, Helvetica, sans-serif; color:#222222;">
+
+  <div style=3D"max-width:900px; margin:0 auto; padding:20px 24px; font-siz=
+e:15px; line-height:1.55;">
+
+    <p style=3D"margin:0 0 22px 0;">
+      Francisco excelente d=C3=ADa y gusto en saludarte por esta v=C3=ADa.
+    </p>
+
+    <p style=3D"margin:0 0 22px 0;">
+      Desde el equipo de <strong>B2B Medea</strong>, reconociendo tu rol ac=
+tual y potencial inter=C3=A9s en el tema:
+    </p>
+
+    <p style=3D"margin:0 0 14px 0;">
+      Queremos extenderte un <strong>acceso exclusivo</strong> al=20
+      <strong style=3D"color:#7fb86a;">ESG Forum M=C3=A9xico 2026</strong>,=
+ reservado =C3=BAnicamente para perfiles que hoy est=C3=A1n tomando decisio=
+nes clave en sostenibilidad, estrategia y transformaci=C3=B3n empresarial.
+    </p>
+
+    <p style=3D"margin:0 0 18px 0;">
+      Tu rol dentro de tu organizaci=C3=B3n te posiciona como un actor clav=
+e en esta conversaci=C3=B3n, por lo que te hacemos llegar una invitaci=C3=
+=B3n para que nos acompa=C3=B1es en este foro:
+    </p>
+
+    <p style=3D"margin:0 0 4px 0;">
+      =F0=9F=93=8D <strong>Jueves 28 de mayo</strong>
+    </p>
+
+    <p style=3D"margin:0 0 22px 0;">
+=F0=9F=93=8D <a href=3D"https://u60788408.ct.sendgrid.net/ls/click?upn=3Du0=
+01.-2B4PAQppqDPeA-2BNfK6rGH6ptQeZTLbp6uOw4aheK4EWNFlK46FETt-2F9lUQQF4PZEE3A=
+Y1M9EhwaqlsZkL5m5qjg-3D-3D2KNV_o-2FHwpNrucO-2F412UNy797P40hJBwZqFE1lCE0mZJA=
+64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybScelCqDIX3NV-2Fv6Uk33tDYdJz=
+neoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FWA0MgFTMWRNBhNW-2BTsWqu5mLa=
+1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdifJqR6ZvqxmPJFtmbW7vcOeItxfp=
+pVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokXhwO8CD3PmmEc-2Bs2vwVSzC4j-=
+2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-2FfgZ0dpYg402zMxuszjUBC8Lp=
+q5yoPR-2BQY8FmslsQrga0Xz5xouXS6k16AUMhXB6OqpZtYs35kTU4Fc39-2FJP1zw-2FSgzHAl=
+vVi7nwrM85uYKSoqF1SG4l1aK07II8tyYlGEN3JdkQYdmAs0W-2F19tQYE9oOQ5j8D6w-3D-3D"=
+ style=3D"color:#0057d8; text-decoration:underline;"><strong>Terraza Polanc=
+o, Central W, CDMX</strong></a>, Ferrocarril de Cuernavaca 214, Polanco I. =
+Secc.
+</p>
+
+    <p style=3D"margin:0 0 14px 0;">
+      En d=C3=B3nde, de la mano de directores y l=C3=ADderes de industria e=
+staremos abordando lo que realmente est=C3=A1 marcando la agenda ESG en M=
+=C3=A9xico:
+    </p>
+
+    <ul style=3D"margin:0 0 22px 34px; padding:0;">
+      <li><strong>Qu=C3=A9 est=C3=A1 generando resultados en las organizaci=
+ones</strong></li>
+      <li><strong>C=C3=B3mo convertir la sostenibilidad en una ventaja comp=
+etitiva</strong></li>
+      <li><strong>D=C3=B3nde est=C3=A1n las oportunidades reales de negocio=
+</strong></li>
+      <li><strong>Y c=C3=B3mo las empresas est=C3=A1n pasando de la estrate=
+gia a la ejecuci=C3=B3n</strong></li>
+    </ul>
+
+    <p style=3D"margin:0 0 16px 0;">
+      Junto con las conversaciones de mayor impacto en el ecosistema de Sos=
+tenibilidad en el pa=C3=ADs:
+    </p>
+
+    <p style=3D"margin:0 0 28px 0; color:#7fb86a; font-size:17px; font-weig=
+ht:bold; text-decoration:underline; line-height:1.55;">
+      Transici=C3=B3n Energ=C3=A9tica, Electromovilidad, Agua 2023, Tecnolo=
+g=C3=ADa /IA Sostenible, Nearshoring y Cambio Clim=C3=A1tico, Econom=C3=ADa=
+ Circular, Agricultura Regenerativa, Monitoreo Ambiental, Auditor=C3=ADas y=
+ Regulaci=C3=B3n normativa, entre otros...
+    </p>
+
+<!-- IMAGEN SPEAKERS / PROGRAMA -->
+<div style=3D"text-align:left; margin:0 0 26px 0;">
+  <a href=3D"https://u60788408.ct.sendgrid.net/ls/click?upn=3Du001.-2B4PAQp=
+pqDPeA-2BNfK6rGH6pgwFcKXHKSiFTCnlqrrEKeBb7rHU77hGo-2FrjQaJDKubO2uCllZzFWPuT=
+-2FdgRM8mIwWub5ihS9lY4IxV62D-2Bj-2B1TiS5gcQHRffEvHqJkTvpNFhoj_o-2FHwpNrucO-=
+2F412UNy797P40hJBwZqFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKf=
+n1ybScelCqDIX3NV-2Fv6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSd=
+i-2FWA0MgFTMWRNBhNW-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh=
+8bdifJqR6ZvqxmPJFtmbW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4K=
+stokXhwO8CD3PmmEc-2Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEG=
+svv0-2FfgZ0dpYg4KL2nyGBd84lP1IfaeZtMLU9COc-2B78sui-2BTcb6h8wABsU68c0ZeoSzH1=
+gY6iexAYKkSg-2FB-2F-2FzJbKhE-2FOAI9AcxywHr-2BPSb4y7j18b7dVq-2BpCQB-2BvSQ6SN=
+krEbopLRVivEvduXroGRY8MWeFTsUPCMmw-3D-3D" target=3D"_blank" style=3D"text-d=
+ecoration:none; border:0;">
+    <img=20
+      src=3D"http://cdn.mcauto-images-production.sendgrid.net/454b010622f94=
+a32/ddaf1109-344c-4313-a28a-9bd89fc98c53/1047x751.jpeg"=20
+      alt=3D"ESG Forum M=C3=A9xico 2026 - L=C3=ADderes ESG Confirmados"=20
+      style=3D"width:100%; max-width:560px; height:auto; display:block; bor=
+der:0;"
+    >
+  </a>
+</div>
+
+    <p style=3D"margin:0 0 24px 0; font-size:16px;">
+      En conjunto con <u>Directores de Empresas e Instituciones</u> como:=20
+      <strong>TetraPak, Coca Cola, CONAGUA, SEDEMA, Iconn (Seven Eleven), E=
+Y, Banorte, entre muchas otras.</strong>
+    </p>
+
+    <p style=3D"margin:0 0 16px 0;">
+      No es s=C3=B3lo un evento empresarial.
+    </p>
+
+    <p style=3D"margin:0 0 18px 0;">
+      Es un espacio dise=C3=B1ado para conocer <strong>tendencias de mayor =
+impacto en el tema</strong>, conversaciones estrat=C3=A9gicas y conexiones =
+estrat=C3=A9gicas con <u>l=C3=ADderes del ecosistema.</u>
+    </p>
+
+    <p style=3D"margin:0 0 18px 0;">
+      =F0=9F=91=89 <strong>Acceso exclusivo por invitaci=C3=B3n (cupo limit=
+ado):</strong>=20
+      <a href=3D"https://u60788408.ct.sendgrid.net/ls/click?upn=3Du001.-2B4=
+PAQppqDPeA-2BNfK6rGH6o3clPsX6neZtzOnbG0zSARNBLjIu-2Fg0U4eDiINCkaghT5679ktoy=
+PCWliLi7qu70g-3D-3DPvjN_o-2FHwpNrucO-2F412UNy797P40hJBwZqFE1lCE0mZJA64yuZ0F=
+JBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybScelCqDIX3NV-2Fv6Uk33tDYdJzneoC2Ze=
+gjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FWA0MgFTMWRNBhNW-2BTsWqu5mLa1XiaWcO=
+oVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdifJqR6ZvqxmPJFtmbW7vcOeItxfppVG1KJ4=
+sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokXhwO8CD3PmmEc-2Bs2vwVSzC4j-2Bzi07H=
+MzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-2FfgZ0dpYg4680sjk6VisoR-2BqAiWYaJ=
+IVjkoFaXA-2BCBUX-2F73r9Usv1lmzx37xq3sxl0A8NvgyDepENbkSAF3FjEZehFqFjuazr9ztG=
+CUAu0igsiOw6JjshSzihL5Wh2V4jFtYIc7d2L-2BkcwItUrJ51SiTQttuKntA-3D-3D" style=
+=3D"color:#0057d8; text-decoration:underline;">
+        ENLACE PRE-REGISTRO (Francisco Herrera)
+      </a>
+    </p>
+
+    <p style=3D"margin:0 0 18px 0;">
+      Te recordamos que la cortes=C3=ADa otorgada es de manera exclusiva e =
+intransferible.
+    </p>
+
+    <p style=3D"margin:0 0 18px 0;">
+      Tras validar tu informaci=C3=B3n del pre-registro, te estaremos hacie=
+ndo llegar tu confirmaci=C3=B3n de acceso y posteriormente: reservando tu l=
+ugar en el evento.
+    </p>
+
+    <p style=3D"margin:0 0 30px 0;">
+      Te recordamos que este es un <u>evento de invitaci=C3=B3n exclusiva</=
+u> por lo que te pedimos confirmar tu asistencia lo antes posible, idealmen=
+te <strong>antes del Mi=C3=A9rcoles 13 de Mayo</strong>, ya que el <strong>=
+cupo es limitado.</strong>
+    </p>
+
+    <p style=3D"margin:0 0 4px 0;">
+      <strong>Para B2B Medea va a ser todo un gusto contar con tu presencia=
+. =C2=A1Seguimos en contacto!</strong>
+    </p>
+
+    <p style=3D"margin:0;">
+      <em>*Reservado a Cupo Limitado*.</em>
+    </p>
+        </p>
+        <p style=3D"text-align:justify;padding:0px;margin:0px">
+Si tienes alguna duda o deseas coordinar una breve llamada para conocer m=
+=C3=A1s detalles, con gusto te atendemos:
+</p>
+
+<p style=3D"text-align:justify;padding:0px;margin:0px"><br></p>
+
+<p style=3D"text-align:justify;padding:0px;margin:0px">
+Calendly (15 min):
+<font color=3D"#0000ff"><u><a href=3D"https://u60788408.ct.sendgrid.net/ls/=
+click?upn=3Du001.-2B4PAQppqDPeA-2BNfK6rGH6lU2HdIuN1QEhDhkBKG-2BmAJCjl1MQgJy=
+QbWDecqzWARo86OXeBE3eBCsprsQmSP3Yw-3D-3D96_d_o-2FHwpNrucO-2F412UNy797P40hJB=
+wZqFE1lCE0mZJA64yuZ0FJBO5fHhcWQwcmQ0hsMUXMK235WjkFC6A28SKfn1ybScelCqDIX3NV-=
+2Fv6Uk33tDYdJzneoC2ZegjxWL7x585TXEbTFrBXFaMm8SqlV8cAAG8kSdi-2FWA0MgFTMWRNBh=
+NW-2BTsWqu5mLa1XiaWcOoVGFGkXaxPcpCW0jHeAvL21c59XsWK-2FmSXh8bdifJqR6ZvqxmPJF=
+tmbW7vcOeItxfppVG1KJ4sJP7ZU607h4zXWhhO9-2FBTHQUwBY4EpRWy4KstokXhwO8CD3PmmEc=
+-2Bs2vwVSzC4j-2Bzi07HMzWbhaZTG5VG9Eo1n1SX8hKfBHabnSBmstOEGsvv0-2FfgZ0dpYg4d=
+Il0yOgJK1Ks-2BPtwToC-2F8LHUlvA0UtTTzTkahJtWEa3dqaWG8cTiGOtTvTwDksDIPGHTieOV=
+bNYMK7d3BE-2BYZ4-2Fq2mZP-2BDjVB-2F6L-2FkV03T-2Fg-2FGuGYbhH-2BAZg4o3ZnSvUHe4=
+YnnU-2Bu6ysCwQEU36fBg-3D-3D" target=3D"_blank">https://calendly.com/partici=
+pantes-b2bforums-mexico/networkingevents-2026</a></u></font>
+</p>
+</p>
+</p>=20
+
+<p style=3D"padding:0px;margin:0px"><b>Equipo B2B MEDEA</b></p>
+<p style=3D"padding:0px;margin:0px">=F0=9F=93=9E <b>56 5011 2857</b></p>
+  </div>
+
+<img src=3D"https://u60788408.ct.sendgrid.net/wf/open?upn=3Du001.Jd5CIVl5R-=
+2BPRjzu-2FZNs-2BGGSfmCtkFlXkpDZhm4QR0-2F9OBiA1VshtWUPIAwsn8Z3kEZ4s98-2FFjML=
+7lQAq8NN9BU1Q2fP90xXHaxbCcipPhxSWhTWkoMUtYibWhqdsm2NRgw-2F7gf06pjA64Vm9JZTa=
+XzA4bI7Jq1A67kZqjeOXYAoF7x6L70Nx2VV1z9buifiWHWmY39fo0o4IpzWZfHDPDGCHrn77Beo=
+uexkBTDLUBzhCHNoL9jaZqQ0HNoc-2B1eQ33TeN-2F7qsbm4iYjHiXD0eSwcHXOUD1hpqNljmEU=
+5VKUnaUuy-2BYlIzOTjTw3lODLaSNJQVTnhKXvIYS3pR6lMwhvxErD-2F0Z3Xe8xeH0wh5ULG8o=
+qEKe-2FL3iQPXvK3ygLOW7sOXDuZncKmzTrrvR8GkyD3suioGfw-2BRK2YDbDD4vJj4WQE-2BcJ=
+F-2FnyTZ6kkKS8Lh2JM51y5c4WqrXBnuQEih-2Fk0S70H6tmpnhvJwrJEA4g-2FkITW3O-2Fsxg=
+h-2B9-2FmdUE-2FPfa8q3o1NCnjC-2BVKW07OiNqQ-3D-3D" alt=3D"" width=3D"1" heigh=
+t=3D"1" border=3D"0" style=3D"height:1px !important;width:1px !important;bo=
+rder-width:0 !important;margin-top:0 !important;margin-bottom:0 !important;=
+margin-right:0 !important;margin-left:0 !important;padding-top:0 !important=
+;padding-bottom:0 !important;padding-right:0 !important;padding-left:0 !imp=
+ortant;"/></body>
+</html>
+
+--3d5140e115e4e6c20fa7030ec5962a756ba4d285ae59483860b43c49a3b5--
+
+
+
+

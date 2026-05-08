@@ -1,0 +1,373 @@
+Return-path: <joeun@joeunelectro.co.kr>
+Received: from [192.168.10.200] ([192.168.10.200]) 
+          by nmailtmbs1p.shinhan.com ([192.168.10.51]) 
+          with ESMTP id 1778133295.38361.139733628159744.nmailtmbs1p
+          for <jieyoung@shinhan.com>; 
+          Thu, 07 May 2026 14:54:55 +0900 (KST) 
+Received: from localhost.localdomain (localhost [127.0.0.1])
+	by Email-APT1.localdomain (Postfix) with SMTP id 4gB1g30F5CzV01WD
+	for <jieyoung@shinhan.com>; Thu, 07 May 2026 14:54:55 +0900 (KST)
+Received: from nmailsp1p.shinhan.com (unknown [192.168.10.200])
+	by Email-APT1.localdomain (Postfix) with ESMTP id 4gB1dS4dFpzV01Vx
+	for <jieyoung@shinhan.com>; Thu, 07 May 2026 14:53:32 +0900 (KST)
+Received-SPF: Pass 
+	client-ip="121.254.168.203" envelope-from="joeun@joeunelectro.co.kr" 
+Received: from [121.254.168.203] ([121.254.168.203]) 
+          by nmailsp1p.shinhan.com ([192.168.10.93]) 
+          with ESMTP id 1778133211.987984.139969455093504.nmailsp1p
+          for <jieyoung@shinhan.com>; 
+          Thu, 07 May 2026 14:53:31 +0900 (KST) 
+Received: from hi-smtp-node4 (unknown [172.18.0.4])
+	by smtp4.hiworks.co.kr (Postfix) with ESMTPS id 4gB1dR6gBfzKRn3d
+	for <jieyoung@shinhan.com>; Thu,  7 May 2026 14:53:31 +0900 (KST)
+Received: from hi-smtp-node1 (unknown [192.168.71.167])
+	by hi-smtp-node4 (Postfix) with ESMTP id 4gB1dR5qXJzQL3F6
+	for <jieyoung@shinhan.com>; Thu,  7 May 2026 14:53:31 +0900 (KST)
+Received: from localhost.localdomain (amphora-3294b420-308a-4b9e-8a1d-bf25580dae1f.openstack.gabia.io)
+ 	by hi-smtp-node1 with ESMTP id uzdnt3tsfdnyodu5;
+ 	Thu, 07 May 2026 14:53:31 +0900 (KST)
+Received: from localhost.localdomain (hiworks-new-api2 [127.0.0.1])
+	by localhost.localdomain (8.15.2/8.14.7) with ESMTP id 6475rVwl028197
+	for <jieyoung@shinhan.com>; Thu, 7 May 2026 14:53:31 +0900
+Received: from shared-mail-api.office.hiworks.com (nobody@localhost)
+	by localhost.localdomain (8.15.2/8.14.7/Submit) with SMTP id 6475rVs5028196
+	for <jieyoung@shinhan.com>; Thu, 7 May 2026 14:53:31 +0900
+X-Authentication-Warning: localhost.localdomain: nobody owned process doing -bs
+Message-ID: <b9aa75ae87be590b931b7a335bf48b82@shared-mail-api.office.hiworks.com>
+Date: Thu, 07 May 2026 14:53:31 +0900
+Subject: RE: =?utf-8?B?6rGw656Y7JaR7IudIOuwnOyGoeuTnOumveuLiOuLpC4=?=
+X-TERRACE-DUMMYSUBJECT: Terrace Spam system                                  *
+X-Trellix: Clean
+From: =?utf-8?B?IuyhsOydgOyghOyekCI=?= <joeun@joeunelectro.co.kr>
+Reply-To: =?utf-8?B?IuyhsOydgOyghOyekCI=?= <joeun@joeunelectro.co.kr>
+To: jieyoung@shinhan.com
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift_1778133211_61144200cb3a5ad7a578d34672123862_=_"
+X-Authinfo: HIWORKS WEB authenticated <joeun@joeunelectro.co.kr>
+X-TERRACE-SPAMMARK: NO       (SR:3.00)                     
+  (by Terrace)                                                   
+X-TERRACE-SID: 1778133295.38361.139733628159744.nmailtmbs1p
+
+
+--_=_swift_1778133211_61144200cb3a5ad7a578d34672123862_=_
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+=EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94, =EC=A1=B0=EC=9D=80=EC=A0=
+=84=EC=9E=90 =ED=97=88=ED=98=84=EC=A0=95=EC=9E=85=EB=8B=88=EB=8B=A4 =
+=EC=9A=94=EC=B2=AD=ED=95=98=EC=8B=A0 =EC=8B=A0=EC=9A=A9=ED=8F=89=EA=B0=
+=80 =EA=B1=B4 =ED=98=B9=EC=8B=9C =EC=96=B8=EC=A0=9C=EA=B9=8C=EC=A7=80 =
+=ED=95=B4=EB=93=9C=EB=A6=AC=EB=A9=B4 =EB=90=A0=EA=B9=8C=EC=9A=94?=ED=8C=
+=8C=EC=9D=B8=EB=93=9C=EC=8B=9C=EC=8A=A4=ED=85=9C=EC=9D=B4 =EC=98=A4=
+=EB=A5=98=EA=B0=80 =EB=82=98=EC=84=9C =EC=9E=90=EB=A3=8C =EC=B2=A8=EB=B6=
+=80=EA=B0=80 =EB=8B=A4=EB=90=98=EC=A7=80 =EC=95=8A=EC=95=84=EC=84=9C=
+=EC=9A=94,=EA=B8=B0=ED=95=9C=EC=9D=B4 =EC=9E=88=EC=9C=BC=EC=8B=9C=EB=A9=
+=B4 =ED=9A=8C=EC=8B=A0 =EB=B6=80=ED=83=81=EB=93=9C=EB=A6=BD=EB=8B=88=
+=EB=8B=A4 =EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4 ------------Origina=
+l Message------------Subject : =EA=B1=B0=EB=9E=98=EC=96=91=EC=8B=9D =
+=EB=B0=9C=EC=86=A1=EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=A4Date : 2026-05-07 13:=
+39:04From : "=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89" &lt;admin@shinhancom&gt;=
+To : "=EA=B3=A0=EA=B0=9D" &lt;joeun@joeunelectrocokr&gt;Cc :               =
+                                                                           =
+                                                                           =
+                                                                           =
+                                                                   =
+=EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94 =EC=8B=A0=ED=95=9C=EC=9D=
+=80=ED=96=89 =EA=B1=B0=EB=9E=98=EC=96=91=EC=8B=9D =EB=B0=9C=EC=86=A1 =
+=EB=A9=94=EC=9D=BC=EC=9E=85=EB=8B=88=EB=8B=A4                              =
+                                                                           =
+                                                                           =
+                                                                           =
+                                                                           =
+                        =EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94 =
+=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89 =EB=B0=95=EC=A7=80=EC=98=81 =EA=B3=
+=BC=EC=9E=A5 =EC=9E=85=EB=8B=88=EB=8B=A4                                   =
+          =EA=B3=A0=EA=B0=9D=EB=8B=98=EA=BB=98=EC=84=9C =EC=9A=94=EC=B2=
+=AD=ED=95=98=EC=8B=A0 =EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89 =EA=B1=B0=
+=EB=9E=98=EC=97=90 =ED=95=84=EC=9A=94=ED=95=9C =EC=96=91=EC=8B=9D=EC=9D=
+=84 =EB=B3=B4=EB=82=B4=EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=A4                 =
+                            =EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=
+=94=EC=A0=95=EA=B8=B0 =EC=8B=A0=EC=9A=A9=ED=8F=89=EA=B0=80 =EC=9C=84=
+=ED=95=98=EC=97=AC =EC=B2=A8=EB=B6=80=EC=84=9C=EB=A5=98 =EC=B0=B8=EA=B3=
+=A0=ED=95=98=EC=8B=9C=EC=96=B4 1 =EC=8B=A0=EC=9A=A9=ED=8F=89=EA=B0=80 =
+=EC=8B=A0=EC=B2=AD2 =ED=8C=8C=EC=9D=B8=EB=93=9C =EC=8B=9C=EC=8A=A4=ED=85=
+=9C =EC=84=9C=EB=A5=98=EC=A0=9C=EC=B6=9C=EB=91=90=EA=B0=80=EC=A7=80 =
+=EC=A7=84=ED=96=89=EC=9A=94=EC=B2=AD =EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=
+=A4=EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4=EC=9D=B4=EB=A9=94=EC=9D=
+=BC =ED=9A=8C=EC=8B=A0=EC=9D=B4 =ED=95=84=EC=9A=94=ED=95=A0 =EA=B2=BD=
+=EC=9A=B0 =EC=A3=BC=EC=86=8C =EC=95=88=EB=82=B4 : jieyoung@shinhancom (=
+=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89 =EA=B5=AC=ED=8F=AC =EB=B0=95=EC=A7=
+=80=EC=98=81 =EA=B3=BC=EC=9E=A5)                                           =
+  =EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4 =ED=96=89=EB=B3=B5=ED=95=
+=9C =ED=95=98=EB=A3=A8 =EB=B3=B4=EB=82=B4=EC=8B=AD=EC=8B=9C=EC=98=A4       =
+                                                                           =
+                                                                           =
+                                                                           =
+                                                                           =
+                                                                           =
+                                                                       1[=
+=EC=84=9C=EC=8B=9D]=EB=B9=84=EB=8C=80=EB=A9=B4 =EC=8B=A0=EC=9A=A9=ED=8F=
+=89=EA=B0=80 =EC=8B=A0=EC=B2=AD=EB=B0=A9=EB=B2=95(=EA=B8=B0=EC=97=85=
+=EB=B1=85=ED=82=B9_=EB=B2=95=EC=9D=B8=EA=B3=A0=EA=B0=9D=EC=9A=A9)2[=
+=EC=84=9C=EC=8B=9D]=ED=8C=8C=EC=9D=B8=EB=93=9C=EC=8B=9C=EC=8A=A4=ED=85=
+=9C =EB=B9=84=EB=8C=80=EB=A9=B4=EC=A6=9D=EB=AA=85=EC=84=9C=EC=A0=9C=
+=EC=B6=9C =EB=A7=A4=EB=89=B4=EC=96=BC(PC=EC=82=AC=EC=9A=A9=EC=9E=90=
+=EC=9A=A9)                                                                 =
+                                                                           =
+                                                                           =
+                                                            =EB=B3=B8 =
+=EB=A9=94=EC=9D=BC=EC=9D=80 =EB=B0=9C=EC=8B=A0 =EC=A0=84=EC=9A=A9 =EB=A9=
+=94=EC=9D=BC=EB=A1=9C=EC=84=9C =EA=B3=A0=EA=B0=9D=EB=8B=98=EA=BB=98=
+=EC=84=9C =EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89 =EB=A9=94=EC=9D=BC =EC=88=
+=98=EC=8B=A0 =EB=8F=99=EC=9D=98=EB=A5=BC =ED=95=98=EC=85=A8=EA=B1=B0=
+=EB=82=98                   =EA=B3=A0=EA=B0=9D=EB=8B=98=EC=9D=98 =EA=B8=
+=B0=EC=A1=B4=EA=B1=B0=EB=9E=98 =EC=9C=A0=EC=A7=80 =EB=93=B1=EC=9D=84 =
+=EC=9C=84=ED=95=B4 =EC=95=88=EB=82=B4=EB=93=9C=EB=A6=AC=EB=8A=94 =EB=A9=
+=94=EC=9D=BC=EC=9E=85=EB=8B=88=EB=8B=A4                    =EC=83=81=
+=EB=8B=B4=EC=9D=84 =EC=9B=90=ED=95=98=EC=8B=9C=EB=8A=94 =EA=B2=BD=EC=9A=
+=B0                                    Web   =EA=B3=A0=EA=B0=9D=EC=84=BC=
+=ED=84=B0=EB=A1=9C =EB=AC=B8=EC=9D=98=ED=95=98=EC=8B=9C=EA=B8=B0 =EB=B0=
+=94=EB=9E=8D=EB=8B=88=EB=8B=A4                   This mail is only for tran=
+smission purpose It was sent because you had agreed to receive e-mail from =
+Shinhan Bank or to deliver information to maintain your existing transactio=
+ns If you need an assistance, Please call                                  =
+   web   customer center                               (=EC=A3=BC)=EC=8B=
+=A0=ED=95=9C=EC=9D=80=ED=96=89(admin@shinhancom) 04513 =EC=84=9C=EC=9A=
+=B8               =EC=A4=91=EA=B5=AC =EC=84=B8=EC=A2=85=EB=8C=80=EB=A1=
+=9C9=EA=B8=B8 20(=ED=83=9C=ED=8F=89=EB=A1=9C2=EA=B0=80,=EB=8C=80=EA=B2=
+=BD=EB=B9=8C=EB=94=A9) =ED=86=B5=EC=8B=A0=ED=8C=90=EB=A7=A4=EC=97=85 =
+=EC=8B=A0=EA=B3=A0=EB=B2=88=ED=98=B8 : =EC=A4=91=EA=B5=AC 00345=ED=98=B8   =
+            COPYRIGHT (C)2012 BY SHINHAN BANK ALL RIGHTS RESERVED          =
+       =20
+
+--_=_swift_1778133211_61144200cb3a5ad7a578d34672123862_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<div class=3D"se-contents" style=3D"box-sizing: content-box; font-family: &=
+quot;=EB=A7=91=EC=9D=80 =EA=B3=A0=EB=94=95&quot;; font-size: 13px; line-hei=
+ght: 1.6;"><p style=3D"margin: 0px;"><span>=EC=95=88=EB=85=95=ED=95=98=
+=EC=84=B8=EC=9A=94, =EC=A1=B0=EC=9D=80=EC=A0=84=EC=9E=90 =ED=97=88=ED=98=
+=84=EC=A0=95=EC=9E=85=EB=8B=88=EB=8B=A4.&nbsp;</span></p><p style=3D"margin=
+: 0px;"><br></p><p style=3D"margin: 0px;"><span>=EC=9A=94=EC=B2=AD=ED=95=
+=98=EC=8B=A0 =EC=8B=A0=EC=9A=A9=ED=8F=89=EA=B0=80 =EA=B1=B4 =ED=98=B9=
+=EC=8B=9C =EC=96=B8=EC=A0=9C=EA=B9=8C=EC=A7=80 =ED=95=B4=EB=93=9C=EB=A6=
+=AC=EB=A9=B4 =EB=90=A0=EA=B9=8C=EC=9A=94?</span></p><p style=3D"margin: 0px=
+;"><span>=ED=8C=8C=EC=9D=B8=EB=93=9C=EC=8B=9C=EC=8A=A4=ED=85=9C=EC=9D=B4 =
+=EC=98=A4=EB=A5=98=EA=B0=80 =EB=82=98=EC=84=9C =EC=9E=90=EB=A3=8C =EC=B2=
+=A8=EB=B6=80=EA=B0=80 =EB=8B=A4=EB=90=98=EC=A7=80 =EC=95=8A=EC=95=84=
+=EC=84=9C=EC=9A=94,</span></p><p style=3D"margin: 0px;"><span>=EA=B8=B0=
+=ED=95=9C=EC=9D=B4 =EC=9E=88=EC=9C=BC=EC=8B=9C=EB=A9=B4 =ED=9A=8C=EC=8B=
+=A0 =EB=B6=80=ED=83=81=EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=A4.&nbsp;</span></p=
+><p style=3D"margin: 0px;"><span>=EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=
+=EB=8B=A4.&nbsp;</span></p><p style=3D"margin: 0px;"><br></p><blockquote id=
+=3D"reply_forward_body" style=3D"padding-left: 5px; padding-right: 0px; mar=
+gin-left: 5px; margin-right: 0px; border-left: 2px solid rgb(0, 0, 0);"><p =
+style=3D"font-size: 10pt; line-height: 1.6em; margin: 0px;"><span>---------=
+---Original Message------------</span></p><p style=3D"font-size: 10pt; line=
+-height: 1.6em; margin: 0px;"><span style=3D"font-weight: bold;">Subject :<=
+/span><span>&nbsp;=EA=B1=B0=EB=9E=98=EC=96=91=EC=8B=9D =EB=B0=9C=EC=86=
+=A1=EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=A4.</span></p><p style=3D"font-size: 1=
+0pt; line-height: 1.6em; margin: 0px;"><span style=3D"font-weight: bold;">D=
+ate :</span><span>&nbsp;2026-05-07 13:39:04</span></p><p style=3D"font-size=
+: 10pt; line-height: 1.6em; margin: 0px;"><span style=3D"font-weight: bold;=
+">From :</span><span>&nbsp;"=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89" &lt;admin=
+@shinhan.com&gt;</span></p><p style=3D"font-size: 10pt; line-height: 1.6em;=
+ margin: 0px;"><span style=3D"font-weight: bold;">To :</span><span>&nbsp;"=
+=EA=B3=A0=EA=B0=9D" &lt;joeun@joeunelectro.co.kr&gt;</span></p><p style=3D"=
+font-size: 10pt; line-height: 1.6em; margin: 0px;"><span style=3D"font-weig=
+ht: bold;">Cc :</span></p><div class=3D"se-div"><p style=3D"line-height: 1p=
+x; margin: 0px;"><br></p></div><p style=3D"font-family: sans-serif; font-si=
+ze: 10pt; padding: 0px 0px 0px 13.3333px; margin: 0px;"><br><span>&nbsp;</s=
+pan></p><div class=3D"se-para-div" style=3D"margin: 0px;"><xmeta http-equiv=
+=3D"Content-Type" content=3D"text/html; charset=3Deuc-kr"><table width=3D"6=
+85" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" style=3D"margin:0 auto=
+;border:3px solid #ddd;">   <tbody><tr><td style=3D"padding:10px 20px;borde=
+r-bottom:1px solid #ddd;">         <table width=3D"100%" border=3D"0" cells=
+pacing=3D"0" cellpadding=3D"0">            <tbody><tr><td align=3D"left">  =
+                <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpa=
+dding=3D"0">                     <tbody><tr><td align=3D"left"><a href=3D"h=
+ttp://track.shinhan.com/main/servlet/LinkTraceEC.do?SEND_MODE=3Ddesonlya666=
+92ea4a3596e6&amp;CAMPAIGN_NO=3Ddesonlyf3abeeec6a881ca9391101be6b82c764&amp;=
+RESULT_SEQ=3Ddesonly46e41694098edd4cb4f4ba14b692467e21719ea3a8a634a3&amp;ST=
+ART_DATE=3Ddesonly18bbffb133c92ddb1c983942a1363efa&amp;END_DATE=3Ddesonly91=
+e782a8e9997d321c983942a1363efa&amp;LIST_SEQ=3Ddesonly78c64cac7b59231d2c2e76=
+eb100789f2&amp;RECORD_SEQ=3Ddesonlyf40b1eba950e3bcb&amp;CUSTOMER_ID=3Ddeson=
+lyf40b1eba950e3bcb&amp;LINK_SEQ=3D1&amp;LINK_URL=3Dhttp%3A%2F%2Fwww.shinhan=
+.com&amp;LINKTITLE=3D%3Cimg+src%3D%22http%3A%2F%2Fimg.shinhan.com%2Fnexhpe%=
+2Femail%2Flogo_shinhan.gif%22+alt%3D%22%BD%C5%C7%D1%C0%BA%C7%E0%22+border%3=
+D%220%22%3E" target=3D"_blank" rel=3D"noreferrer noopener"><img src=3D"http=
+://img.shinhan.com/nexhpe/email/logo_shinhan.gif" alt=3D"=EC=8B=A0=ED=95=
+=9C=EC=9D=80=ED=96=89" border=3D"0"></a></td><td align=3D"right"><img src=
+=3D"http://img.shinhan.com/nexhpe/eMail/email_20141118_img02.gif" alt=3D"=
+=EB=AF=B8=EB=9E=98=EB=A5=BC =ED=95=A8=EA=BB=98=ED=95=98=EB=8A=94 =EB=94=
+=B0=EB=9C=BB=ED=95=9C =EA=B8=88=EC=9C=B5"></td></tr>                  </tbo=
+dy></table>               </td></tr>         </tbody></table>      </td></t=
+r>   <tr><td style=3D"text-align:center;">         <table align=3D"center" =
+width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">           =
+ <tbody><tr bgcolor=3D"#F8F8F8"><td width=3D"15"></td><td style=3D"padding:=
+4px">                  <table width=3D"99%" border=3D"0" cellspacing=3D"0" =
+cellpadding=3D"2" style=3D"text-align:center; horizontal-align:middle; marg=
+in-top:25px;">                     <tbody><tr><td>                         =
+  <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">  =
+                            <tbody><tr><td>                                =
+    <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">=
+                                       <tbody><tr><td style=3D"font-size: 2=
+4px; font-family: =EB=A7=91=EC=9D=80 =EA=B3=A0=EB=94=95, Malgun Gothic; lin=
+e-height:150%; color:#434343; font-weight:bold; text-decoration: none; text=
+-align:center;">=EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94. =EC=8B=A0=
+=ED=95=9C=EC=9D=80=ED=96=89 =EA=B1=B0=EB=9E=98=EC=96=91=EC=8B=9D =EB=B0=
+=9C=EC=86=A1 =EB=A9=94=EC=9D=BC=EC=9E=85=EB=8B=88=EB=8B=A4.</td></tr>      =
+                              </tbody></table>                             =
+    </td></tr>                           </tbody></table>                  =
+      </td></tr>                  </tbody></table>                  <table =
+width=3D"99%" border=3D"0" cellspacing=3D"0" cellpadding=3D"2" style=3D"tex=
+t-align:center; margin:30px 0;">                     <tbody><tr><td>       =
+                    <table width=3D"100%" border=3D"0" cellspacing=3D"0" ce=
+llpadding=3D"0">                              <tbody><tr><td>              =
+                      <table width=3D"100%" border=3D"0" cellspacing=3D"0" =
+cellpadding=3D"0">                                       <tbody><tr><td sty=
+le=3D"font-family: =EB=A7=91=EC=9D=80 =EA=B3=A0=EB=94=95, Malgun Gothic; li=
+ne-height:120%; color:#434343; text-decoration: none; text-align:left;">   =
+                                          <div style=3D"font-size: 15px; ma=
+rgin-top:5px;">=EC=95=88=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94. =EC=8B=A0=
+=ED=95=9C=EC=9D=80=ED=96=89 =EB=B0=95=EC=A7=80=EC=98=81 =EA=B3=BC=EC=9E=
+=A5 =EC=9E=85=EB=8B=88=EB=8B=A4.</div>                                     =
+        <div style=3D"font-size: 15px; margin-top:15px;">=EA=B3=A0=EA=B0=
+=9D=EB=8B=98=EA=BB=98=EC=84=9C =EC=9A=94=EC=B2=AD=ED=95=98=EC=8B=A0 =
+=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89 =EA=B1=B0=EB=9E=98=EC=97=90 =ED=95=
+=84=EC=9A=94=ED=95=9C =EC=96=91=EC=8B=9D=EC=9D=84 =EB=B3=B4=EB=82=B4=
+=EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=A4.</div>                                =
+             <div style=3D"font-size: 15px; margin-top:15px;">=EC=95=88=
+=EB=85=95=ED=95=98=EC=84=B8=EC=9A=94.<br><br>=EC=A0=95=EA=B8=B0 =EC=8B=
+=A0=EC=9A=A9=ED=8F=89=EA=B0=80 =EC=9C=84=ED=95=98=EC=97=AC =EC=B2=A8=
+=EB=B6=80=EC=84=9C=EB=A5=98 =EC=B0=B8=EA=B3=A0=ED=95=98=EC=8B=9C=EC=96=
+=B4 <br><br>1. =EC=8B=A0=EC=9A=A9=ED=8F=89=EA=B0=80 =EC=8B=A0=EC=B2=AD<br><=
+br>2. =ED=8C=8C=EC=9D=B8=EB=93=9C =EC=8B=9C=EC=8A=A4=ED=85=9C =EC=84=9C=
+=EB=A5=98=EC=A0=9C=EC=B6=9C<br><br>=EB=91=90=EA=B0=80=EC=A7=80 =EC=A7=84=
+=ED=96=89=EC=9A=94=EC=B2=AD =EB=93=9C=EB=A6=BD=EB=8B=88=EB=8B=A4.<br><br>=
+=EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4.<br><br>=EC=9D=B4=EB=A9=94=
+=EC=9D=BC =ED=9A=8C=EC=8B=A0=EC=9D=B4 =ED=95=84=EC=9A=94=ED=95=A0 =EA=B2=
+=BD=EC=9A=B0 =EC=A3=BC=EC=86=8C =EC=95=88=EB=82=B4 :<br> jieyoung@shinhan.c=
+om (=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89 =EA=B5=AC=ED=8F=AC =EB=B0=95=
+=EC=A7=80=EC=98=81 =EA=B3=BC=EC=9E=A5)<br><br></div>                       =
+                      <div style=3D"font-size: 15px; margin-top:15px;">=
+=EA=B0=90=EC=82=AC=ED=95=A9=EB=8B=88=EB=8B=A4. =ED=96=89=EB=B3=B5=ED=95=
+=9C =ED=95=98=EB=A3=A8 =EB=B3=B4=EB=82=B4=EC=8B=AD=EC=8B=9C=EC=98=A4.<br></=
+div>                                          </td></tr>                   =
+                 </tbody></table>                                 </td></tr=
+>                           </tbody></table>                        </td></=
+tr>                  </tbody></table>               </td><td width=3D"15"><=
+/td></tr>            <tr bgcolor=3D"#dddddd"><td colspan=3D"3" style=3D"hei=
+ght:1px;"></td></tr>         </tbody></table>         <table align=3D"cente=
+r" width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">        =
+    <tbody><tr bgcolor=3D"#FFFFFF"><td width=3D"15"></td><td style=3D"paddi=
+ng:4px">                  <table width=3D"100%" border=3D"0" cellspacing=3D=
+"0" cellpadding=3D"2" style=3D"text-align:center; margin-top:15px;">       =
+              <tbody><tr><td bgcolor=3D"#fafaff" style=3D"width:100%; paddi=
+ng:5px 0; vertical-align:top;">                           <table width=3D"1=
+00%" cellspacing=3D"0" cellpadding=3D"0" style=3D"padding:20px; border:1px =
+solid #ccc">                              <tbody><tr><td>                  =
+                  <table width=3D"100%" border=3D"0" cellspacing=3D"0" cell=
+padding=3D"0">                                       <tbody><tr><td style=
+=3D"text-align:left; font-size: 12px; font-family: =EB=A7=91=EC=9D=80 =
+=EA=B3=A0=EB=94=95, Malgun Gothic; line-height:150%; color:#434343;">      =
+                                       <ul style=3D"margin: 0px; padding: 0=
+px;"><li><a href=3D"https://img.shinhan.com/sbank2016/form/2021042300000072=
+0004WF00001000000001.PDF?1685632898078">1.[=EC=84=9C=EC=8B=9D]=EB=B9=84=
+=EB=8C=80=EB=A9=B4 =EC=8B=A0=EC=9A=A9=ED=8F=89=EA=B0=80 =EC=8B=A0=EC=B2=
+=AD=EB=B0=A9=EB=B2=95(=EA=B8=B0=EC=97=85=EB=B1=85=ED=82=B9_=EB=B2=95=
+=EC=9D=B8=EA=B3=A0=EA=B0=9D=EC=9A=A9)</a><br></li></ul><ul style=3D"margin:=
+ 0px; padding: 0px;"><li><a href=3D"https://img.shinhan.com/sbank2016/form/=
+20200413000000520002WF00003000000005.PDF?1674660120276">2.[=EC=84=9C=
+=EC=8B=9D]=ED=8C=8C=EC=9D=B8=EB=93=9C=EC=8B=9C=EC=8A=A4=ED=85=9C =EB=B9=
+=84=EB=8C=80=EB=A9=B4=EC=A6=9D=EB=AA=85=EC=84=9C=EC=A0=9C=EC=B6=9C =
+=EB=A7=A4=EB=89=B4=EC=96=BC(PC=EC=82=AC=EC=9A=A9=EC=9E=90=EC=9A=A9)</a><br>=
+</li></ul>                                          </td></tr>             =
+                       </tbody></table>                                 </t=
+d></tr>                           </tbody></table>                        <=
+/td></tr>                  </tbody></table>               </td><td width=3D=
+"15"></td></tr>         </tbody></table>      </td></tr>   <tr><td colspan=
+=3D"3" style=3D"height:5px;"></td></tr></tbody></table><table width=3D"678"=
+ border=3D"0" cellspacing=3D"0" cellpadding=3D"0" style=3D"margin:0 auto;pa=
+dding-top:3px;">  <tbody><tr><td><div style=3D"width:100%; margin: 0 auto; =
+">      <table width=3D"100%" cellpadding=3D"0" style=3D"border: 3px solid =
+#ddd;">         <tbody><tr><td valign=3D"top" width=3D"116" style=3D"border=
+-right: 1px solid #f3f3f3; padding:20px 0 20px 20px;">               <img s=
+rc=3D"http://img.shinhan.com/nexhpe/email/logo_shinhan_bot.gif" alt=3D"=
+=EC=8B=A0=ED=95=9C=EC=9D=80=ED=96=89">            </td><td style=3D"font-si=
+ze: 11px; font-family: =EB=8F=8B=EC=9B=80; color: #999; line-height: 14px; =
+padding: 20px 20px 20px 0;">                  =EB=B3=B8 =EB=A9=94=EC=9D=
+=BC=EC=9D=80 =EB=B0=9C=EC=8B=A0 =EC=A0=84=EC=9A=A9 =EB=A9=94=EC=9D=BC=
+=EB=A1=9C=EC=84=9C =EA=B3=A0=EA=B0=9D=EB=8B=98=EA=BB=98=EC=84=9C =EC=8B=
+=A0=ED=95=9C=EC=9D=80=ED=96=89 =EB=A9=94=EC=9D=BC =EC=88=98=EC=8B=A0 =
+=EB=8F=99=EC=9D=98=EB=A5=BC =ED=95=98=EC=85=A8=EA=B1=B0=EB=82=98<br>       =
+            =EA=B3=A0=EA=B0=9D=EB=8B=98=EC=9D=98 =EA=B8=B0=EC=A1=B4=
+=EA=B1=B0=EB=9E=98 =EC=9C=A0=EC=A7=80 =EB=93=B1=EC=9D=84 =EC=9C=84=ED=95=
+=B4 =EC=95=88=EB=82=B4=EB=93=9C=EB=A6=AC=EB=8A=94 =EB=A9=94=EC=9D=BC=
+=EC=9E=85=EB=8B=88=EB=8B=A4. <br>                   =EC=83=81=EB=8B=B4=
+=EC=9D=84 =EC=9B=90=ED=95=98=EC=8B=9C=EB=8A=94 =EA=B2=BD=EC=9A=B0          =
+        <a href=3D"https://track.shinhan.com/main/servlet/LinkTraceEC.do?SE=
+ND_MODE=3Ddesonlya66692ea4a3596e6&amp;CAMPAIGN_NO=3Ddesonlyf3abeeec6a881ca9=
+792699e370c8b7c1&amp;RESULT_SEQ=3Ddesonlyb8da7ac889df8942a6ab20303ef3ee5021=
+719ea3a8a634a3&amp;START_DATE=3Ddesonly487efea4adb8badbf22f3b9d46d1844e&amp=
+;END_DATE=3Ddesonlyfe842ba5628025c1f22f3b9d46d1844e&amp;LIST_SEQ=3Ddesonlyf=
+3abeeec6a881ca901ac770d27ae68d3&amp;RECORD_SEQ=3Ddesonlyf40b1eba950e3bcb&am=
+p;CUSTOMER_ID=3Ddesonly2307981190d1d75cb97174c094a6cad7&amp;LINK_SEQ=3D2&am=
+p;LINK_URL=3Dhttps%3A%2F%2Fmain.shinhan.com%2Fhpe%2Findex.jsp&amp;LINKTITLE=
+=3D%0D%0A++++++++++++++++++Web+++%B0%ED%B0%B4%BC%BE%C5%CD" target=3D"_blank=
+" style=3D"color: #6184a9; text-decoration: none;" rel=3D"noreferrer noopen=
+er">                  Web   =EA=B3=A0=EA=B0=9D=EC=84=BC=ED=84=B0</a>=
+=EB=A1=9C =EB=AC=B8=EC=9D=98=ED=95=98=EC=8B=9C=EA=B8=B0 =EB=B0=94=EB=9E=
+=8D=EB=8B=88=EB=8B=A4.<br> <br>                  This mail is only for tran=
+smission purpose. It was sent because you had agreed to receive e-mail from=
+ Shinhan Bank or to deliver information to maintain your existing transacti=
+ons. If you need an assistance, Please call                   <a href=3D"ht=
+tps://track.shinhan.com/main/servlet/LinkTraceEC.do?SEND_MODE=3Ddesonlya666=
+92ea4a3596e6&amp;CAMPAIGN_NO=3Ddesonlyf3abeeec6a881ca9792699e370c8b7c1&amp;=
+RESULT_SEQ=3Ddesonlyb8da7ac889df8942a6ab20303ef3ee5021719ea3a8a634a3&amp;ST=
+ART_DATE=3Ddesonly487efea4adb8badbf22f3b9d46d1844e&amp;END_DATE=3Ddesonlyfe=
+842ba5628025c1f22f3b9d46d1844e&amp;LIST_SEQ=3Ddesonlyf3abeeec6a881ca901ac77=
+0d27ae68d3&amp;RECORD_SEQ=3Ddesonlyf40b1eba950e3bcb&amp;CUSTOMER_ID=3Ddeson=
+ly2307981190d1d75cb97174c094a6cad7&amp;LINK_SEQ=3D2&amp;LINK_URL=3Dhttps%3A=
+%2F%2Fmain.shinhan.com%2Fhpe%2Findex.jsp&amp;LINKTITLE=3D%0D%0A++++++++++++=
+++++++Web+++%B0%ED%B0%B4%BC%BE%C5%CD" target=3D"_blank" style=3D"color: #61=
+84a9; text-decoration: none;" rel=3D"noreferrer noopener">                 =
+ web   customer center.</a> <br>               <hr style=3D"color: #ddd; bo=
+rder-style: dotted">               (=EC=A3=BC)=EC=8B=A0=ED=95=9C=EC=9D=
+=80=ED=96=89(admin@shinhan.com) 04513 =EC=84=9C=EC=9A=B8               =
+=EC=A4=91=EA=B5=AC =EC=84=B8=EC=A2=85=EB=8C=80=EB=A1=9C9=EA=B8=B8 20(=
+=ED=83=9C=ED=8F=89=EB=A1=9C2=EA=B0=80,=EB=8C=80=EA=B2=BD=EB=B9=8C=EB=94=
+=A9)<br> =ED=86=B5=EC=8B=A0=ED=8C=90=EB=A7=A4=EC=97=85 =EC=8B=A0=EA=B3=
+=A0=EB=B2=88=ED=98=B8 : =EC=A4=91=EA=B5=AC 00345=ED=98=B8<br>              =
+ COPYRIGHT (C)2012 BY SHINHAN BANK. ALL RIGHTS RESERVED.            </td></=
+tr>      </tbody></table></div></td></tr></tbody></table><br><img width=3D"=
+0" height=3D"0" src=3D"http://track.shinhan.com/main/servlet/ReceiveConfirm=
+EC.do?SEND_MODE=3Ddesonlya66692ea4a3596e6&amp;CAMPAIGN_NO=3Ddesonlyf3abeeec=
+6a881ca9391101be6b82c764&amp;RESULT_SEQ=3Ddesonly46e41694098edd4cb4f4ba14b6=
+92467e21719ea3a8a634a3&amp;START_DATE=3Ddesonly18bbffb133c92ddb1c983942a136=
+3efa&amp;END_DATE=3Ddesonly91e782a8e9997d321c983942a1363efa&amp;LIST_SEQ=3D=
+desonly78c64cac7b59231d2c2e76eb100789f2&amp;RECORD_SEQ=3Ddesonlyf40b1eba950=
+e3bcb&amp;CUSTOMER_ID=3Ddesonlyf40b1eba950e3bcb"></xmeta></div><p style=3D"=
+margin: 0px;"><br><span class=3D"se-drawing-object-wrapper se-image" style=
+=3D"vertical-align: baseline; text-indent: 0px; display: inline-block;"><im=
+g style=3D"vertical-align: bottom; width: 0px; height: 0px;" src=3D"https:/=
+/track.shinhan.com/main/servlet/ReceiveConfirmEC.do?SEND_MODE=3Ddesonlya666=
+92ea4a3596e6&amp;CAMPAIGN_NO=3Ddesonlyf3abeeec6a881ca9792699e370c8b7c1&amp;=
+RESULT_SEQ=3Ddesonlyb8da7ac889df8942a6ab20303ef3ee5021719ea3a8a634a3&amp;ST=
+ART_DATE=3Ddesonly487efea4adb8badbf22f3b9d46d1844e&amp;END_DATE=3Ddesonlyfe=
+842ba5628025c1f22f3b9d46d1844e&amp;LIST_SEQ=3Ddesonlyf3abeeec6a881ca901ac77=
+0d27ae68d3&amp;RECORD_SEQ=3Ddesonlyf40b1eba950e3bcb&amp;CUSTOMER_ID=3Ddeson=
+ly2307981190d1d75cb97174c094a6cad7" width=3D"0" height=3D"0"></span></p></b=
+lockquote></div>
+          <img gabiamail src=3Dhttps://shared-mail-api.office.hiworks.com/v=
+3/joeunelectro.co.kr/mails/confirm/joeunelectro.co.kr_925760_69fc288d816d5/=
+jieyoung@shinhan.com width=3D'0' height=3D'0'>
+
+--_=_swift_1778133211_61144200cb3a5ad7a578d34672123862_=_--
+
+
+
+
+

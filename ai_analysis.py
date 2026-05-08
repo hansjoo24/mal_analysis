@@ -225,10 +225,10 @@ async def run_command_async(cmd_list, input_data=None, max_retries=6, retry_dela
             
             if "gemini" in cmd_list[0].lower():
                 full_output = stdout_str + stderr_str
-                # 429 한도 초과, 503 서버 혼잡 등 발생 시 강제 로테이션 시도
-                if "429" in full_output or "503" in full_output or "Quota exceeded" in full_output or "exhausted" in full_output.lower():
+                # 429 한도 초과, 503 서버 혼잡, 403 유출/권한 오류 등 발생 시 강제 로테이션 시도
+                if any(err in full_output for err in ["429", "503", "403", "Quota exceeded", "exhausted", "Forbidden", "PERMISSION_DENIED"]):
                     if attempt < max_retries:
-                        print(f"[*] API Error Detected (429/503). Waiting for retry window... (Attempt {attempt + 1}/{max_retries})")
+                        print(f"[*] API Error Detected (429/503/403). Attempting key rotation... (Attempt {attempt + 1}/{max_retries})")
                         
                         import time
                         global last_rotation_time
