@@ -1,2 +1,5 @@
 api_keys.txt
 config.ini
+eml/
+attachfiles/
+gemini_api_usage.log
