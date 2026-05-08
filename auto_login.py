@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-mail.shinhan.com 자동 로그인 스크립트
+mail.shinhan.com 자동 로그인 스크립트#
 - Selenium: 브라우저 자동화 (로그인 + 2차 인증 입력)
 - IMAP: Gmail에서 2차 인증코드 자동 읽기
 """
